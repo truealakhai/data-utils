@@ -31,15 +31,19 @@ class SourceType(Enum):
     OFFICIAL = "official"            # publisher / organizzatore torneo (fonte primaria)
     COMMUNITY = "community"          # sito community/news storico e affidabile
     SOLD_COMP = "sold_comp"          # vendita CONCLUSA verificata (non prezzo di richiesta)
+    AGGREGATE_STAT = "aggregate_stat"  # statistica aggregata di terzi (es. price guide
+                                        # Cardmarket: low/avg/trend) — NON una singola
+                                        # transazione verificata, metodologia altrui
     LISTING_CLAIM = "listing_claim"  # claim di un singolo rivenditore/inserzione, non verificato
 
 
 # punti base e giorni di decadimento (oltre i quali il peso scende a zero) per tipo fonte
 SOURCE_WEIGHTS: Dict[SourceType, Dict[str, int]] = {
-    SourceType.OFFICIAL:       {"points": 40, "decay_days": 180},
-    SourceType.COMMUNITY:      {"points": 20, "decay_days": 120},
-    SourceType.SOLD_COMP:      {"points": 25, "decay_days": 45},
-    SourceType.LISTING_CLAIM:  {"points": 5,  "decay_days": 30},
+    SourceType.OFFICIAL:        {"points": 40, "decay_days": 180},
+    SourceType.COMMUNITY:       {"points": 20, "decay_days": 120},
+    SourceType.SOLD_COMP:       {"points": 25, "decay_days": 45},
+    SourceType.AGGREGATE_STAT:  {"points": 15, "decay_days": 30},
+    SourceType.LISTING_CLAIM:   {"points": 5,  "decay_days": 30},
 }
 
 MAX_SCORE = 95                        # tetto: mai certezza assoluta
