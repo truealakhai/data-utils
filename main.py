@@ -75,7 +75,11 @@ def build_ebay_token():
     if "EBAY_CLIENT_ID" not in os.environ or "EBAY_CLIENT_SECRET" not in os.environ:
         print("  [info] Credenziali eBay assenti — scanner eBay disattivato per questo run")
         return None
-    return get_application_token(os.environ["EBAY_CLIENT_ID"], os.environ["EBAY_CLIENT_SECRET"])
+    try:
+        return get_application_token(os.environ["EBAY_CLIENT_ID"], os.environ["EBAY_CLIENT_SECRET"])
+    except Exception as e:
+        print(f"  [ERRORE] Autenticazione eBay fallita ({e}) — scanner eBay disattivato per questo run, continuo con le altre fonti")
+        return None
 
 
 def populate_riftbound_keys(watchlist: list) -> None:
