@@ -79,8 +79,13 @@ class StateStore:
 
     @staticmethod
     def _evidence_key(e: Evidence) -> tuple:
+        # (url, source_name) e non solo url: più evidenze possono condividere
+        # la stessa URL (es. 4 prezzi di marketplace diversi dalla STESSA
+        # risposta YGOPRODeck) senza essere duplicati tra loro — bug reale
+        # trovato testando l'orchestratore con lo scanner Yu-Gi-Oh, non
+        # ipotetico.
         if e.url:
-            return (e.url,)
+            return (e.url, e.source_name)
         return (e.source_name, e.observed_on.isoformat(), e.note)
 
     # --- ultima fascia per cui abbiamo alertato ---
