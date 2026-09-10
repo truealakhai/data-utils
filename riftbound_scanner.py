@@ -40,6 +40,10 @@ from scoring import Evidence, SourceType
 RIFTBOUND_API_BASE_URL = "https://riftbound-api.p.rapidapi.com"
 TCG_CARDMARKET_API_BASE_URL = "https://tcg-cardmarket-api.p.rapidapi.com"
 
+# Questo invece VERIFICATO sui docs ufficiali (tcgapi.dev/), endpoint reale
+# confermato via curl di esempio nella loro home page.
+TCGAPI_DEV_BASE_URL = "https://api.tcgapi.dev"
+
 HttpGetWithHeaders = Callable[[str, dict], dict]  # (url, headers) -> JSON parsato
 
 
@@ -145,7 +149,44 @@ def fetch_tcg_cardmarket_api(
 
 
 # ---------------------------------------------------------------------------
-# Fonte 3: cardmarket-api.com — NON IMPLEMENTATO, schema non verificato
+# Fonte 3: tcgapi.dev — VERIFICATA sui docs ufficiali (a differenza delle due
+# sopra, questa ha SDK ufficiali Python/npm e adozione di terzi visibile su
+# GitHub — stesso standard di affidabilità di tcgdex/YGOPRODeck, non delle
+# API RapidAPI senza track record). Copre Riftbound esplicitamente tra i 7
+# giochi aggiornati giornalmente. Dati da TCGPlayer, quindi USD non EUR.
+# ---------------------------------------------------------------------------
+
+def fetch_tcgapi_dev(
+    card_name: str,
+    api_key: str,
+    game: str = "riftbound",
+    http_get: HttpGetWithHeaders = default_http_get,
+) -> List[Evidence]:
+    url = f"{TCGAPI_DEV_BASE_URL}/v1/search?q={card_name}&game={game}"
+    data = http_get(url, {"X-API-Key": api_key})
+
+    evidences = []
+    for card in data.get("data", []):
+        price = card.get("price")
+        if price is None:
+            continue
+        change_7d = card.get("price_change_7d")
+        note = f"price={price} USD"
+        if change_7d is not None:
+            note += f", variazione 7gg={change_7d}%"
+        evidences.append(Evidence(
+            source_type=SourceType.AGGREGATE_STAT,
+            source_name=f"tcgapi.dev - {card.get('name', card_name)}",
+            observed_on=date.today(),  # tcgapi.dev non riporta un timestamp per-carta nella risposta search
+            url=url,
+            note=note,
+            marketplace="TCGPlayer (via tcgapi.dev)",
+        ))
+    return evidences
+
+
+# ---------------------------------------------------------------------------
+# Fonte 4: cardmarket-api.com — NON IMPLEMENTATO, schema non verificato
 # ---------------------------------------------------------------------------
 
 def fetch_cardmarket_api_com(card_name: str, api_key: str, **_kwargs) -> List[Evidence]:
@@ -167,9 +208,10 @@ def fetch_all_riftbound_sources(
     http_get: HttpGetWithHeaders = default_http_get,
 ) -> List[Evidence]:
     """
-    api_keys: dict con chiavi 'riftbound_api' e/o 'tcg_cardmarket_api' (e in
-    futuro 'cardmarket_api'). Le fonti per cui manca la chiave vengono saltate
-    silenziosamente (utile se ne attivi solo alcune per ora).
+    api_keys: dict con chiavi 'riftbound_api', 'tcg_cardmarket_api',
+    'tcgapi_dev' (e in futuro 'cardmarket_api'). Le fonti per cui manca la
+    chiave vengono saltate silenziosamente (utile se ne attivi solo alcune
+    per ora).
     """
     evidences: List[Evidence] = []
 
@@ -178,6 +220,9 @@ def fetch_all_riftbound_sources(
 
     if "tcg_cardmarket_api" in api_keys:
         evidences += fetch_tcg_cardmarket_api(card_name, api_keys["tcg_cardmarket_api"], http_get=http_get)
+
+    if "tcgapi_dev" in api_keys:
+        evidences += fetch_tcgapi_dev(card_name, api_keys["tcgapi_dev"], http_get=http_get)
 
     if "cardmarket_api" in api_keys:
         evidences += fetch_cardmarket_api_com(card_name, api_keys["cardmarket_api"])
@@ -209,15 +254,25 @@ if __name__ == "__main__":
                 }],
                 "meta": {"total": 1, "page": 1},
             }
+        if "tcgapi.dev" in url:
+            # Schema verificato dal curl di esempio sulla loro home page
+            return {
+                "data": [{
+                    "name": "Jinx",
+                    "set": "Riftbound Base Set",
+                    "price": 13.85,
+                    "price_change_7d": 1.8,
+                }]
+            }
         return {}
 
     print("=" * 70)
-    print("Jinx (Riftbound) — evidenze da 2 delle 3 fonti (la terza non è")
-    print("ancora implementata, schema non verificato)")
+    print("Jinx (Riftbound) — evidenze da 3 delle 4 fonti (cardmarket-api.com")
+    print("resta non implementata, schema non verificato)")
     print("=" * 70)
     evs = fetch_all_riftbound_sources(
         "Jinx",
-        api_keys={"riftbound_api": "FAKE_KEY", "tcg_cardmarket_api": "FAKE_KEY"},
+        api_keys={"riftbound_api": "FAKE_KEY", "tcg_cardmarket_api": "FAKE_KEY", "tcgapi_dev": "FAKE_KEY"},
         http_get=fake_http_get,
     )
     for ev in evs:
@@ -225,9 +280,11 @@ if __name__ == "__main__":
 
     print()
     print("=" * 70)
-    print("Le due fonti concordano abbastanza (trend ~12.45€ da entrambe) — ma")
+    print("Le tre fonti concordano abbastanza (trend/price 12.45-13.85€/$) — ma")
     print("passandole allo scoring restano 'Bassa': stesso tipo (AGGREGATE_STAT),")
-    print("nessuna diversità di TIPO di fonte, nessun vero sold_comp.")
+    print("nessuna diversità di TIPO di fonte, nessun vero sold_comp. Anche con")
+    print("4 fonti concordi, senza un tipo diverso non si supera 'Bassa' — la")
+    print("regola non cambia in base a QUANTE fonti dello stesso tipo hai.")
     print("=" * 70)
     from scoring import score_claim
     result = score_claim("jinx_riftbound_prezzo", evs, as_of=date(2026, 9, 9))
