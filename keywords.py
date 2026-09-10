@@ -46,3 +46,13 @@ RIFTBOUND = [
 ]
 
 ALL_KEYWORDS = GENERIC + POKEMON + YUGIOH + RIFTBOUND
+
+# Falsi positivi osservati in un run reale (9 alert Discovery, 7 irrilevanti):
+# notizie su videogiochi digitali o correzioni di stampa contengono spesso
+# "exclusive"/"limited" per il proprio marketing, ma non hanno niente a che
+# fare con l'hype di una carta fisica. Se il testo contiene uno di questi,
+# viene scartato a prescindere da quali altre parole chiave contenga.
+EXCLUDE = [
+    "duel links", "master duel", "tag force", "efootball",
+    "correction", "printing error", "qualifying points",
+]

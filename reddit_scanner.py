@@ -26,7 +26,7 @@ from datetime import date, datetime, timezone
 from typing import Callable, List, Optional, Protocol, Set
 
 from scoring import Evidence, SourceType
-from keywords import ALL_KEYWORDS as RELEVANT_KEYWORDS
+from keywords import ALL_KEYWORDS as RELEVANT_KEYWORDS, EXCLUDE
 
 DEFAULT_SUBREDDITS = ["PokemonTCG", "yugioh", "RiftboundTCG"]
 
@@ -50,6 +50,8 @@ class RedditClient(Protocol):
 
 def _is_relevant(post: RedditPost, min_score: int = 5) -> bool:
     text = post.title.lower()
+    if any(kw in text for kw in EXCLUDE):
+        return False
     return post.score >= min_score and any(kw in text for kw in RELEVANT_KEYWORDS)
 
 

@@ -49,7 +49,7 @@ HttpGet = Callable[[str], str]  # url -> HTML grezzo (stringa)
 
 # Lista centralizzata in keywords.py — Serebii/PokeBeach coprono più giochi,
 # quindi uso tutte le parole chiave (generiche + specifiche per gioco).
-from keywords import ALL_KEYWORDS as RELEVANT_KEYWORDS
+from keywords import ALL_KEYWORDS as RELEVANT_KEYWORDS, EXCLUDE
 
 
 def default_http_get(url: str) -> str:
@@ -89,6 +89,8 @@ class Headline:
 
 def _is_relevant(headline: Headline) -> bool:
     text = f"{headline.title}".lower()
+    if any(kw in text for kw in EXCLUDE):
+        return False
     return any(kw in text for kw in RELEVANT_KEYWORDS)
 
 

@@ -23,7 +23,7 @@ from datetime import date, datetime
 from typing import Callable, List, Optional
 
 from scoring import Evidence, SourceType
-from keywords import GENERIC, YUGIOH
+from keywords import GENERIC, YUGIOH, EXCLUDE
 
 NEWS_URL = "https://www.yugioh-card.com/eu/news/"
 
@@ -95,6 +95,8 @@ def fetch_konami_news(http_get: Callable[[str], str] = default_http_get) -> List
 
 def _is_relevant(item: KonamiNewsItem) -> bool:
     text = item.title.lower()
+    if any(kw in text for kw in EXCLUDE):
+        return False
     return any(kw in text for kw in RELEVANT_KEYWORDS)
 
 

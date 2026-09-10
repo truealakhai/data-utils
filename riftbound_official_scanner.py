@@ -20,7 +20,7 @@ from datetime import date, datetime
 from typing import Callable, List, Optional
 
 from scoring import Evidence, SourceType
-from keywords import GENERIC, RIFTBOUND
+from keywords import GENERIC, RIFTBOUND, EXCLUDE
 
 NEWS_URL = "https://playriftbound.com/en-us/news/"
 
@@ -90,6 +90,8 @@ def fetch_riftbound_news(http_get: Callable[[str], str] = default_http_get) -> L
 
 def _is_relevant(item: RiftboundNewsItem) -> bool:
     text = item.title_and_excerpt.lower()
+    if any(kw in text for kw in EXCLUDE):
+        return False
     return any(kw in text for kw in RELEVANT_KEYWORDS)
 
 
