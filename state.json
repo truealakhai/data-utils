@@ -1,0 +1,60 @@
+{
+  "seen": {},
+  "evidence": {
+    "grookey_swsh1_1_hype": [
+      {
+        "source_type": "aggregate_stat",
+        "source_name": "Cardmarket price guide via tcgdex.dev (Celebi V)",
+        "observed_on": "2026-09-10",
+        "url": "https://api.tcgdex.net/v2/en/cards/swsh1-1",
+        "note": "avg30=2.37 EUR · trend=2.95 EUR · low=0.5 EUR (low = richiesta attiva, non vendita)",
+        "marketplace": ""
+      }
+    ],
+    "jinx_riftbound_prezzo": [],
+    "blue_eyes_white_dragon": [
+      {
+        "source_type": "aggregate_stat",
+        "source_name": "YGOPRODeck - prezzo Cardmarket",
+        "observed_on": "2026-09-10",
+        "url": "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139",
+        "note": "Cardmarket: 0.08 (metodologia non documentata da YGOPRODeck) [ATTENZIONE: carta con 20 rarità/edizioni diverse (Common, Duel Terminal Normal Parallel Rare, Duel Terminal Super Parallel Rare, Duel Terminal Ultra Parallel Rare, Extra Secret Rare, Ghost Rare, Ghost/Gold Rare, Gold Rare, Gold Secret Rare, Platinum Secret Rare, Premium Gold Rare, Prismatic Secret Rare, Quarter Century Secret Rare, Rare, Secret Rare, Starlight Rare, Super Rare, Ultimate Rare, Ultra Rare, Ultra Rare (Pharaoh's Rare)) — il prezzo potrebbe riferirsi alla stampa più economica, non a quella che ti interessa]",
+        "marketplace": "Cardmarket"
+      },
+      {
+        "source_type": "aggregate_stat",
+        "source_name": "YGOPRODeck - prezzo TCGPlayer",
+        "observed_on": "2026-09-10",
+        "url": "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139",
+        "note": "TCGPlayer: 0.13 (metodologia non documentata da YGOPRODeck) [ATTENZIONE: carta con 20 rarità/edizioni diverse (Common, Duel Terminal Normal Parallel Rare, Duel Terminal Super Parallel Rare, Duel Terminal Ultra Parallel Rare, Extra Secret Rare, Ghost Rare, Ghost/Gold Rare, Gold Rare, Gold Secret Rare, Platinum Secret Rare, Premium Gold Rare, Prismatic Secret Rare, Quarter Century Secret Rare, Rare, Secret Rare, Starlight Rare, Super Rare, Ultimate Rare, Ultra Rare, Ultra Rare (Pharaoh's Rare)) — il prezzo potrebbe riferirsi alla stampa più economica, non a quella che ti interessa]",
+        "marketplace": "TCGPlayer"
+      },
+      {
+        "source_type": "aggregate_stat",
+        "source_name": "YGOPRODeck - prezzo eBay",
+        "observed_on": "2026-09-10",
+        "url": "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139",
+        "note": "eBay: 5.95 (metodologia non documentata da YGOPRODeck) [ATTENZIONE: carta con 20 rarità/edizioni diverse (Common, Duel Terminal Normal Parallel Rare, Duel Terminal Super Parallel Rare, Duel Terminal Ultra Parallel Rare, Extra Secret Rare, Ghost Rare, Ghost/Gold Rare, Gold Rare, Gold Secret Rare, Platinum Secret Rare, Premium Gold Rare, Prismatic Secret Rare, Quarter Century Secret Rare, Rare, Secret Rare, Starlight Rare, Super Rare, Ultimate Rare, Ultra Rare, Ultra Rare (Pharaoh's Rare)) — il prezzo potrebbe riferirsi alla stampa più economica, non a quella che ti interessa]",
+        "marketplace": "eBay"
+      },
+      {
+        "source_type": "aggregate_stat",
+        "source_name": "YGOPRODeck - prezzo Amazon",
+        "observed_on": "2026-09-10",
+        "url": "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139",
+        "note": "Amazon: 3.9 (metodologia non documentata da YGOPRODeck) [ATTENZIONE: carta con 20 rarità/edizioni diverse (Common, Duel Terminal Normal Parallel Rare, Duel Terminal Super Parallel Rare, Duel Terminal Ultra Parallel Rare, Extra Secret Rare, Ghost Rare, Ghost/Gold Rare, Gold Rare, Gold Secret Rare, Platinum Secret Rare, Premium Gold Rare, Prismatic Secret Rare, Quarter Century Secret Rare, Rare, Secret Rare, Starlight Rare, Super Rare, Ultimate Rare, Ultra Rare, Ultra Rare (Pharaoh's Rare)) — il prezzo potrebbe riferirsi alla stampa più economica, non a quella che ti interessa]",
+        "marketplace": "Amazon"
+      },
+      {
+        "source_type": "aggregate_stat",
+        "source_name": "YGOPRODeck - prezzo CoolStuffInc",
+        "observed_on": "2026-09-10",
+        "url": "https://db.ygoprodeck.com/api/v7/cardinfo.php?id=89631139",
+        "note": "CoolStuffInc: 0.99 (metodologia non documentata da YGOPRODeck) [ATTENZIONE: carta con 20 rarità/edizioni diverse (Common, Duel Terminal Normal Parallel Rare, Duel Terminal Super Parallel Rare, Duel Terminal Ultra Parallel Rare, Extra Secret Rare, Ghost Rare, Ghost/Gold Rare, Gold Rare, Gold Secret Rare, Platinum Secret Rare, Premium Gold Rare, Prismatic Secret Rare, Quarter Century Secret Rare, Rare, Secret Rare, Starlight Rare, Super Rare, Ultimate Rare, Ultra Rare, Ultra Rare (Pharaoh's Rare)) — il prezzo potrebbe riferirsi alla stampa più economica, non a quella che ti interessa]",
+        "marketplace": "CoolStuffInc"
+      }
+    ],
+    "teemo_fnd196_rarity": []
+  },
+  "last_alerted_band": {}
+}
