@@ -120,28 +120,50 @@ def sweep_reddit(clients: dict, store: StateStore) -> List:
     return new_relevant
 
 
-def match_sweep_to_items(sweep_results: List, watchlist: List[dict], source_key: str) -> Dict[str, List[Evidence]]:
-    """Smista i risultati della spazzolata alle voci watchlist il cui 'query'
-    compare nel titolo (match semplice, case-insensitive — non serve altro
-    per una watchlist piccola)."""
-    from community_scanner import headline_to_evidence, Headline
-    from reddit_scanner import post_to_evidence, RedditPost
+def sweep_konami(clients: dict, store: StateStore) -> List:
+    from konami_scanner import fetch_konami_news, find_new_relevant_news
+    items = fetch_konami_news(http_get=clients["konami_http_get"])
+    print(f"  [info] Konami EU: {len(items)} news lette")
+    seen = store.get_seen("konami")
+    new_relevant = find_new_relevant_news(items, seen)
+    print(f"  [info] Konami EU: {len(new_relevant)} news nuove e rilevanti dopo il filtro")
+    store.mark_seen("konami", {i.url for i in items})
+    return new_relevant
 
+
+def sweep_riftbound_official(clients: dict, store: StateStore) -> List:
+    from riftbound_official_scanner import fetch_riftbound_news, find_new_relevant_news
+    items = fetch_riftbound_news(http_get=clients["riftbound_official_http_get"])
+    print(f"  [info] PlayRiftbound.com: {len(items)} news lette")
+    seen = store.get_seen("riftbound_official")
+    new_relevant = find_new_relevant_news(items, seen)
+    print(f"  [info] PlayRiftbound.com: {len(new_relevant)} news nuove e rilevanti dopo il filtro")
+    store.mark_seen("riftbound_official", {i.url for i in items})
+    return new_relevant
+
+
+def match_sweep_to_items(
+    sweep_results: List,
+    watchlist: List[dict],
+    source_key: str,
+    get_text: Callable,
+    to_evidence: Callable,
+) -> Dict[str, List[Evidence]]:
+    """
+    Smista i risultati della spazzolata alle voci watchlist il cui 'query'
+    compare nel testo (match semplice, case-insensitive — non serve altro
+    per una watchlist piccola). get_text e to_evidence isolano questa
+    funzione dal tipo specifico di risultato (Headline, RedditPost,
+    KonamiNewsItem, RiftboundNewsItem, ...) — una nuova fonte a spazzolata
+    non richiede di toccare questa funzione, solo di passarle le due giuste.
+    """
     by_claim: Dict[str, List[Evidence]] = {}
     for item in watchlist:
         if source_key not in item["sources"]:
             continue
         query_lower = item["query"].lower()
-        matched = [
-            r for r in sweep_results
-            if query_lower in (r.title if isinstance(r, (Headline, RedditPost)) else "").lower()
-        ]
-        evidences = []
-        for r in matched:
-            if isinstance(r, Headline):
-                evidences.append(headline_to_evidence(r))
-            elif isinstance(r, RedditPost):
-                evidences.append(post_to_evidence(r))
+        matched = [r for r in sweep_results if query_lower in get_text(r).lower()]
+        evidences = [to_evidence(r) for r in matched]
         if evidences:
             by_claim.setdefault(item["claim_id"], []).extend(evidences)
     return by_claim
@@ -177,19 +199,54 @@ def run_scan(
                 print(f"  [ERRORE] {source_name} su {claim_id}: {e} — continuo con le altre fonti")
 
     # --- fase 2: scanner a spazzolata ---
+    from community_scanner import headline_to_evidence, Headline
+    from reddit_scanner import post_to_evidence, RedditPost
+    from konami_scanner import news_to_evidence as konami_to_evidence, KonamiNewsItem
+    from riftbound_official_scanner import news_to_evidence as riftbound_official_to_evidence, RiftboundNewsItem
+
     try:
         community_results = sweep_community(clients, store)
-        for claim_id, evs in match_sweep_to_items(community_results, watchlist, "community").items():
+        matched = match_sweep_to_items(
+            community_results, watchlist, "community",
+            get_text=lambda h: h.title, to_evidence=headline_to_evidence,
+        )
+        for claim_id, evs in matched.items():
             evidence_by_claim[claim_id] += evs
     except Exception as e:
         print(f"  [ERRORE] sweep community: {e} — continuo senza")
 
     try:
         reddit_results = sweep_reddit(clients, store)
-        for claim_id, evs in match_sweep_to_items(reddit_results, watchlist, "reddit").items():
+        matched = match_sweep_to_items(
+            reddit_results, watchlist, "reddit",
+            get_text=lambda p: p.title, to_evidence=post_to_evidence,
+        )
+        for claim_id, evs in matched.items():
             evidence_by_claim[claim_id] += evs
     except Exception as e:
         print(f"  [ERRORE] sweep reddit: {e} — continuo senza")
+
+    try:
+        konami_results = sweep_konami(clients, store)
+        matched = match_sweep_to_items(
+            konami_results, watchlist, "konami",
+            get_text=lambda i: i.title, to_evidence=konami_to_evidence,
+        )
+        for claim_id, evs in matched.items():
+            evidence_by_claim[claim_id] += evs
+    except Exception as e:
+        print(f"  [ERRORE] sweep Konami: {e} — continuo senza")
+
+    try:
+        riftbound_official_results = sweep_riftbound_official(clients, store)
+        matched = match_sweep_to_items(
+            riftbound_official_results, watchlist, "riftbound_official",
+            get_text=lambda i: i.title_and_excerpt, to_evidence=riftbound_official_to_evidence,
+        )
+        for claim_id, evs in matched.items():
+            evidence_by_claim[claim_id] += evs
+    except Exception as e:
+        print(f"  [ERRORE] sweep PlayRiftbound.com: {e} — continuo senza")
 
     # --- fase 3: scoring + alert per ogni claim ---
     for claim_id, new_evidence in evidence_by_claim.items():
@@ -263,6 +320,24 @@ if __name__ == "__main__":
     def fake_pokebeach_http(url: str) -> str:
         return '<html><body><h2><a href="https://pokebeach.com/news/1">Restock alert for a random product</a></h2></body></html>'
 
+    def fake_konami_http(url: str) -> str:
+        return (
+            '<html><body>'
+            '<a href="https://www.yugioh-card.com/eu/blue-eyes-exclusive-promo/">'
+            'News 9 September 2026 Blue-Eyes White Dragon gets a tournament exclusive prize card, limited to top 8 finishers More'
+            '</a>'
+            '</body></html>'
+        )
+
+    def fake_riftbound_official_http(url: str) -> str:
+        return (
+            '<html><body>'
+            '<a href="https://playriftbound.com/en-us/news/announcements/jinx-limited-drawing">'
+            "Announcements2026-09-08T16:00:00.000ZJinx Limited Signature Edition DrawingA new limited exclusive Jinx card, only available via drawing."
+            '</a>'
+            '</body></html>'
+        )
+
     class FakeRedditClient:
         def search_subreddit(self, subreddit: str, query: str, limit: int):
             now = datetime(2026, 9, 9, tzinfo=timezone.utc).timestamp()
@@ -282,6 +357,8 @@ if __name__ == "__main__":
         "ebay_http_get": fake_ebay_http,
         "serebii_http_get": fake_serebii_http,
         "pokebeach_http_get": fake_pokebeach_http,
+        "konami_http_get": fake_konami_http,
+        "riftbound_official_http_get": fake_riftbound_official_http,
         "reddit_client": FakeRedditClient(),
     }
 

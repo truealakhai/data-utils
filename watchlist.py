@@ -32,13 +32,13 @@ WATCHLIST = [
         "game": "riftbound",
         "query": "Jinx",
         "riftbound_api_keys": {},  # popolato da main.py da env
-        "sources": ["riftbound", "ebay_new_listings"],
+        "sources": ["riftbound", "ebay_new_listings", "riftbound_official"],
     },
     {
         "claim_id": "blue_eyes_white_dragon",
         "game": "yugioh",
         "query": "Blue-Eyes White Dragon",
-        "sources": ["yugioh", "reddit"],
+        "sources": ["yugioh", "reddit", "konami"],
     },
     {
         "claim_id": "teemo_fnd196_rarity",

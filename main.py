@@ -28,6 +28,8 @@ from yugioh_scanner import default_http_get as yugioh_http_get
 from riftbound_scanner import default_http_get as riftbound_http_get
 from community_scanner import default_http_get as community_http_get
 from ebay_new_listing_scanner import default_http_get as ebay_http_get, get_application_token
+from konami_scanner import default_http_get as konami_http_get
+from riftbound_official_scanner import default_http_get as riftbound_official_http_get
 
 
 class _NullRedditClient:
@@ -115,6 +117,8 @@ def main() -> int:
         "ebay_http_get": ebay_http_get,
         "serebii_http_get": community_http_get,
         "pokebeach_http_get": community_http_get,
+        "konami_http_get": konami_http_get,
+        "riftbound_official_http_get": riftbound_official_http_get,
         "reddit_client": build_reddit_client(),
     }
 
