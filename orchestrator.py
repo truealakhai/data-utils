@@ -27,40 +27,8 @@ from typing import Callable, Dict, List, Optional
 from scoring import Evidence
 from state_store import StateStore
 from telegram_alerts import process_claim, TelegramSend
+from watchlist import WATCHLIST  # la watchlist vive nel suo file, non qui
 
-
-# ---------------------------------------------------------------------------
-# Watchlist — ristretta di proposito, non "tutto il mercato TCG"
-# ---------------------------------------------------------------------------
-
-WATCHLIST = [
-    {
-        "claim_id": "grookey_swsh1_1_hype",
-        "game": "pokemon",
-        "query": "Grookey",
-        "cardmarket_id": "swsh1-1",
-        "sources": ["cardmarket", "community", "reddit"],
-    },
-    {
-        "claim_id": "jinx_riftbound_prezzo",
-        "game": "riftbound",
-        "query": "Jinx",
-        "riftbound_api_keys": {},  # popolato con le chiavi vere in produzione
-        "sources": ["riftbound", "ebay_new_listings"],
-    },
-    {
-        "claim_id": "blue_eyes_white_dragon",
-        "game": "yugioh",
-        "query": "Blue-Eyes White Dragon",
-        "sources": ["yugioh", "reddit"],
-    },
-    {
-        "claim_id": "teemo_fnd196_rarity",
-        "game": "riftbound",
-        "query": "Riftbound Teemo FND 196",
-        "sources": ["ebay_new_listings"],  # caso Rarity Radar: nuove inserzioni, non hype di prezzo
-    },
-]
 
 
 # ---------------------------------------------------------------------------
