@@ -20,13 +20,13 @@ from datetime import date, datetime
 from typing import Callable, List, Optional
 
 from scoring import Evidence, SourceType
+from keywords import GENERIC, RIFTBOUND
 
 NEWS_URL = "https://playriftbound.com/en-us/news/"
 
-RELEVANT_KEYWORDS = [
-    "exclusive", "limited", "promo", "rare", "tournament", "prize",
-    "sold out", "restock", "pre-order", "preorder", "drawing",
-]
+# Specifico per Riftbound: generico + i termini osservati sulla loro stessa
+# pagina news (vedi keywords.py — gioco troppo giovane per guide di settore).
+RELEVANT_KEYWORDS = GENERIC + RIFTBOUND
 
 # Cattura: (tutto prima del timestamp = categoria) (timestamp ISO) (resto = titolo+estratto)
 ENTRY_PATTERN = re.compile(

@@ -142,31 +142,73 @@ def sweep_riftbound_official(clients: dict, store: StateStore) -> List:
     return new_relevant
 
 
-def match_sweep_to_items(
+def route_sweep_results(
     sweep_results: List,
     watchlist: List[dict],
     source_key: str,
     get_text: Callable,
+    get_url: Callable,
     to_evidence: Callable,
-) -> Dict[str, List[Evidence]]:
+) -> tuple:
     """
     Smista i risultati della spazzolata alle voci watchlist il cui 'query'
-    compare nel testo (match semplice, case-insensitive — non serve altro
-    per una watchlist piccola). get_text e to_evidence isolano questa
-    funzione dal tipo specifico di risultato (Headline, RedditPost,
-    KonamiNewsItem, RiftboundNewsItem, ...) — una nuova fonte a spazzolata
-    non richiede di toccare questa funzione, solo di passarle le due giuste.
+    compare nel testo (match semplice, case-insensitive). get_text, get_url
+    e to_evidence isolano questa funzione dal tipo specifico di risultato
+    (Headline, RedditPost, KonamiNewsItem, RiftboundNewsItem, ...) — una
+    nuova fonte a spazzolata non richiede di toccare questa funzione.
+
+    Ritorna (matched, unmatched):
+    - matched: {claim_id: [Evidence, ...]} — come prima
+    - unmatched: risultati rilevanti ma che non corrispondono a NESSUNA voce
+      watchlist — questi sono i candidati per un alert 'Discovery' (vedi
+      send_discovery_alerts), non semplicemente scartati come accadeva prima.
     """
     by_claim: Dict[str, List[Evidence]] = {}
+    matched_urls = set()
     for item in watchlist:
         if source_key not in item["sources"]:
             continue
         query_lower = item["query"].lower()
         matched = [r for r in sweep_results if query_lower in get_text(r).lower()]
-        evidences = [to_evidence(r) for r in matched]
-        if evidences:
-            by_claim.setdefault(item["claim_id"], []).extend(evidences)
-    return by_claim
+        if matched:
+            by_claim.setdefault(item["claim_id"], []).extend(to_evidence(r) for r in matched)
+            matched_urls.update(get_url(r) for r in matched)
+
+    unmatched = [r for r in sweep_results if get_url(r) not in matched_urls]
+    return by_claim, unmatched
+
+
+def send_discovery_alerts(
+    discovery_candidates: List[tuple],
+    send: TelegramSend,
+    chat_id: str,
+    max_per_run: int = 10,
+) -> int:
+    """
+    Un alert leggero per ogni risultato rilevante ma che non corrisponde a
+    NESSUNA voce della watchlist — il 'fiuta qualcosa di nuovo' di cui
+    parlavamo all'inizio, invece di scartare in silenzio come succedeva
+    prima. Nessun punteggio di affidabilità: per definizione è una fonte
+    sola, non c'è ancora nulla da incrociare — è un segnale grezzo da
+    controllare a mano, non un alert nel senso di process_claim.
+    Limitato a max_per_run per non floodare in caso di tante corrispondenze
+    in un colpo solo (es. dopo un lancio di set con molte notizie insieme).
+    """
+    sent = 0
+    for source_name, text, url in discovery_candidates[:max_per_run]:
+        message = (
+            f"📡 Possibile nuovo hype (non verificato)\n"
+            f"Fonte: {source_name}\n"
+            f"\"{text}\"\n"
+            f"{url}\n\n"
+            f"Non è nella watchlist — verificalo a mano prima di agire."
+        )
+        send(chat_id, message)
+        sent += 1
+    skipped = len(discovery_candidates) - sent
+    if skipped > 0:
+        print(f"  [info] Discovery: {skipped} candidati extra non inviati (limite {max_per_run}/run)")
+    return sent
 
 
 # ---------------------------------------------------------------------------
@@ -204,51 +246,63 @@ def run_scan(
     from konami_scanner import news_to_evidence as konami_to_evidence, KonamiNewsItem
     from riftbound_official_scanner import news_to_evidence as riftbound_official_to_evidence, RiftboundNewsItem
 
+    discovery_candidates = []  # (nome_fonte, testo, url) — non in nessuna voce watchlist
+
     try:
         community_results = sweep_community(clients, store)
-        matched = match_sweep_to_items(
+        matched, unmatched = route_sweep_results(
             community_results, watchlist, "community",
-            get_text=lambda h: h.title, to_evidence=headline_to_evidence,
+            get_text=lambda h: h.title, get_url=lambda h: h.url, to_evidence=headline_to_evidence,
         )
         for claim_id, evs in matched.items():
             evidence_by_claim[claim_id] += evs
+        discovery_candidates += [(h.site, h.title, h.url) for h in unmatched]
     except Exception as e:
         print(f"  [ERRORE] sweep community: {e} — continuo senza")
 
     try:
         reddit_results = sweep_reddit(clients, store)
-        matched = match_sweep_to_items(
+        matched, unmatched = route_sweep_results(
             reddit_results, watchlist, "reddit",
-            get_text=lambda p: p.title, to_evidence=post_to_evidence,
+            get_text=lambda p: p.title, get_url=lambda p: p.url, to_evidence=post_to_evidence,
         )
         for claim_id, evs in matched.items():
             evidence_by_claim[claim_id] += evs
+        discovery_candidates += [(f"r/{p.subreddit}", p.title, p.url) for p in unmatched]
     except Exception as e:
         print(f"  [ERRORE] sweep reddit: {e} — continuo senza")
 
     try:
         konami_results = sweep_konami(clients, store)
-        matched = match_sweep_to_items(
+        matched, unmatched = route_sweep_results(
             konami_results, watchlist, "konami",
-            get_text=lambda i: i.title, to_evidence=konami_to_evidence,
+            get_text=lambda i: i.title, get_url=lambda i: i.url, to_evidence=konami_to_evidence,
         )
         for claim_id, evs in matched.items():
             evidence_by_claim[claim_id] += evs
+        discovery_candidates += [("Konami EU", i.title, i.url) for i in unmatched]
     except Exception as e:
         print(f"  [ERRORE] sweep Konami: {e} — continuo senza")
 
     try:
         riftbound_official_results = sweep_riftbound_official(clients, store)
-        matched = match_sweep_to_items(
+        matched, unmatched = route_sweep_results(
             riftbound_official_results, watchlist, "riftbound_official",
-            get_text=lambda i: i.title_and_excerpt, to_evidence=riftbound_official_to_evidence,
+            get_text=lambda i: i.title_and_excerpt, get_url=lambda i: i.url,
+            to_evidence=riftbound_official_to_evidence,
         )
         for claim_id, evs in matched.items():
             evidence_by_claim[claim_id] += evs
+        discovery_candidates += [("PlayRiftbound.com", i.title_and_excerpt, i.url) for i in unmatched]
     except Exception as e:
         print(f"  [ERRORE] sweep PlayRiftbound.com: {e} — continuo senza")
 
-    # --- fase 3: scoring + alert per ogni claim ---
+    # --- fase 2.5: Discovery — segnali rilevanti ma fuori watchlist ---
+    if discovery_candidates:
+        n_sent = send_discovery_alerts(discovery_candidates, send, chat_id)
+        print(f"  [info] Discovery: {n_sent} alert inviati per prodotti fuori watchlist")
+
+    # --- fase 3: scoring + alert per ogni claim in watchlist ---
     for claim_id, new_evidence in evidence_by_claim.items():
         try:
             score = process_claim(claim_id, new_evidence, store, send, chat_id, as_of=as_of)

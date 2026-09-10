@@ -23,13 +23,13 @@ from datetime import date, datetime
 from typing import Callable, List, Optional
 
 from scoring import Evidence, SourceType
+from keywords import GENERIC, YUGIOH
 
 NEWS_URL = "https://www.yugioh-card.com/eu/news/"
 
-RELEVANT_KEYWORDS = [
-    "exclusive", "limited", "promo", "rare", "tournament", "prize",
-    "sold out", "restock", "pre-order", "preorder",
-]
+# Specifico per Yu-Gi-Oh: generico + i termini che caratterizzano le carte
+# di valore più alto per questo gioco (vedi keywords.py).
+RELEVANT_KEYWORDS = GENERIC + YUGIOH
 
 # Cattura: (categoria) (D Month YYYY) (resto: titolo+estratto, 'More' finale rimosso)
 ENTRY_PATTERN = re.compile(

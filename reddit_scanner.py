@@ -26,14 +26,9 @@ from datetime import date, datetime, timezone
 from typing import Callable, List, Optional, Protocol, Set
 
 from scoring import Evidence, SourceType
+from keywords import ALL_KEYWORDS as RELEVANT_KEYWORDS
 
 DEFAULT_SUBREDDITS = ["PokemonTCG", "yugioh", "RiftboundTCG"]
-
-RELEVANT_KEYWORDS = [
-    "exclusive", "esclusiv", "limited", "limitat", "promo", "rare", "rar",
-    "tournament", "torneo", "prize", "premio", "sold out", "esaurit",
-    "restock", "pre-order", "preorder", "prevendita", "hype",
-]
 
 
 @dataclass

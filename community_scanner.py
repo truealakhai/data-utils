@@ -47,14 +47,9 @@ from scoring import Evidence, SourceType
 
 HttpGet = Callable[[str], str]  # url -> HTML grezzo (stringa)
 
-# Parole chiave che rendono una headline rilevante per il nostro caso d'uso
-# (hype/tirature limitate/esclusive) — senza filtro, ogni notizia qualsiasi
-# (anche "nuovo episodio anime") produrrebbe evidenze inutili.
-RELEVANT_KEYWORDS = [
-    "exclusive", "esclusiv", "limited", "limitat", "promo", "rare", "rar",
-    "tournament", "torneo", "prize", "premio", "sold out", "esaurit",
-    "restock", "pre-order", "preorder", "prevendita",
-]
+# Lista centralizzata in keywords.py — Serebii/PokeBeach coprono più giochi,
+# quindi uso tutte le parole chiave (generiche + specifiche per gioco).
+from keywords import ALL_KEYWORDS as RELEVANT_KEYWORDS
 
 
 def default_http_get(url: str) -> str:
