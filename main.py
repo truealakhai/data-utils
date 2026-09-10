@@ -38,7 +38,7 @@ class _NullRedditClient:
 
 
 def build_reddit_client():
-    if "REDDIT_CLIENT_ID" not in os.environ or "REDDIT_CLIENT_SECRET" not in os.environ:
+    if not os.environ.get("REDDIT_CLIENT_ID") or not os.environ.get("REDDIT_CLIENT_SECRET"):
         print("  [info] Credenziali Reddit assenti — scanner Reddit disattivato per questo run")
         return _NullRedditClient()
 
@@ -72,7 +72,7 @@ def build_reddit_client():
 
 
 def build_ebay_token():
-    if "EBAY_CLIENT_ID" not in os.environ or "EBAY_CLIENT_SECRET" not in os.environ:
+    if not os.environ.get("EBAY_CLIENT_ID") or not os.environ.get("EBAY_CLIENT_SECRET"):
         print("  [info] Credenziali eBay assenti — scanner eBay disattivato per questo run")
         return None
     try:
@@ -100,7 +100,7 @@ def populate_riftbound_keys(watchlist: list) -> None:
 
 def main() -> int:
     required = ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"]
-    missing = [v for v in required if v not in os.environ]
+    missing = [v for v in required if not os.environ.get(v)]
     if missing:
         print(f"ERRORE: variabili d'ambiente mancanti: {missing} — controlla i secrets del repo")
         return 1

@@ -61,6 +61,9 @@ def adapter_riftbound(item: dict, clients: dict, store: StateStore) -> List[Evid
 
 
 def adapter_ebay_new_listings(item: dict, clients: dict, store: StateStore) -> List[Evidence]:
+    if not clients.get("ebay_token"):
+        print(f"  [info] eBay senza token valido — salto ebay_new_listings su {item['claim_id']}")
+        return []
     from ebay_new_listing_scanner import search_active_listings, find_new_listings, listing_to_evidence
     listings = search_active_listings(
         item["query"], access_token=clients["ebay_token"], http_get=clients["ebay_http_get"],
@@ -87,8 +90,14 @@ PER_PRODUCT_ADAPTERS: Dict[str, Callable] = {
 def sweep_community(clients: dict, store: StateStore) -> List:
     from community_scanner import serebii_fetch_headlines, pokebeach_fetch_headlines, find_new_relevant_headlines
     headlines = []
-    headlines += serebii_fetch_headlines(http_get=clients["serebii_http_get"])
-    headlines += pokebeach_fetch_headlines(http_get=clients["pokebeach_http_get"])
+    try:
+        headlines += serebii_fetch_headlines(http_get=clients["serebii_http_get"])
+    except Exception as e:
+        print(f"  [ERRORE] Serebii: {e} — continuo senza")
+    try:
+        headlines += pokebeach_fetch_headlines(http_get=clients["pokebeach_http_get"])
+    except Exception as e:
+        print(f"  [ERRORE] PokeBeach: {e} — continuo senza")
     seen = store.get_seen("community")
     new_relevant = find_new_relevant_headlines(headlines, seen, tcg_only=False)  # il match per query filtra dopo
     store.mark_seen("community", {h.url for h in headlines})

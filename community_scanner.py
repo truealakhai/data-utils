@@ -58,9 +58,28 @@ RELEVANT_KEYWORDS = [
 
 
 def default_http_get(url: str) -> str:
-    """Implementazione reale. Non eseguibile qui (niente rete)."""
+    """
+    Implementazione reale. Non eseguibile qui (niente rete).
+
+    Header ampliati rispetto alla versione precedente (solo User-Agent) —
+    tentativo per il 403 di PokeBeach: un User-Agent generico "Mozilla/5.0"
+    da solo è un segnale abbastanza riconoscibile come bot per un WAF un
+    minimo sofisticato. Questi assomigliano di più a una richiesta di
+    browser vera. NON è garantito che risolva — se PokeBeach usa un
+    controllo più stringente (challenge JS, fingerprinting), niente di
+    quello che possiamo fare con semplici header lo aggira, e a quel punto
+    l'opzione onesta resta toglierlo dallo scanner automatico.
+    """
     import requests
-    resp = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7",
+    }
+    resp = requests.get(url, timeout=15, headers=headers)
     resp.raise_for_status()
     return resp.text
 
