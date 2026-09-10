@@ -91,15 +91,20 @@ def sweep_community(clients: dict, store: StateStore) -> List:
     from community_scanner import serebii_fetch_headlines, pokebeach_fetch_headlines, find_new_relevant_headlines
     headlines = []
     try:
-        headlines += serebii_fetch_headlines(http_get=clients["serebii_http_get"])
+        serebii_headlines = serebii_fetch_headlines(http_get=clients["serebii_http_get"])
+        print(f"  [info] Serebii: {len(serebii_headlines)} headline lette")
+        headlines += serebii_headlines
     except Exception as e:
         print(f"  [ERRORE] Serebii: {e} — continuo senza")
     try:
-        headlines += pokebeach_fetch_headlines(http_get=clients["pokebeach_http_get"])
+        pokebeach_headlines = pokebeach_fetch_headlines(http_get=clients["pokebeach_http_get"])
+        print(f"  [info] PokeBeach: {len(pokebeach_headlines)} headline lette")
+        headlines += pokebeach_headlines
     except Exception as e:
         print(f"  [ERRORE] PokeBeach: {e} — continuo senza")
     seen = store.get_seen("community")
     new_relevant = find_new_relevant_headlines(headlines, seen, tcg_only=False)  # il match per query filtra dopo
+    print(f"  [info] community: {len(new_relevant)} headline nuove e rilevanti dopo il filtro")
     store.mark_seen("community", {h.url for h in headlines})
     return new_relevant
 
@@ -107,8 +112,10 @@ def sweep_community(clients: dict, store: StateStore) -> List:
 def sweep_reddit(clients: dict, store: StateStore) -> List:
     from reddit_scanner import scan_subreddits, find_new_relevant_posts
     posts = scan_subreddits(clients["reddit_client"], query="", subreddits=None, limit_per_sub=50)
+    print(f"  [info] Reddit: {len(posts)} post letti")
     seen = store.get_seen("reddit")
     new_relevant = find_new_relevant_posts(posts, seen)
+    print(f"  [info] Reddit: {len(new_relevant)} post nuovi e rilevanti dopo il filtro")
     store.mark_seen("reddit", {p.post_id for p in posts})
     return new_relevant
 
