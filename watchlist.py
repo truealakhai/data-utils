@@ -38,12 +38,24 @@ WATCHLIST = [
         "claim_id": "blue_eyes_white_dragon",
         "game": "yugioh",
         "query": "Blue-Eyes White Dragon",
-        "sources": ["yugioh", "reddit", "konami"],
+        "sources": ["yugioh", "reddit", "konami", "ygorganization"],
     },
     {
         "claim_id": "teemo_fnd196_rarity",
         "game": "riftbound",
         "query": "Riftbound Teemo FND 196",
         "sources": ["ebay_new_listings"],  # Rarity Radar: nuove inserzioni, non hype di prezzo
+    },
+    {
+        "claim_id": "pokemon_30th_celebration_launch",
+        "game": "pokemon",
+        "query": "30th Celebration",
+        # NIENTE "cardmarket": il set esce il 16/09/2026, tcgdex non ha
+        # ancora un card_id/prezzo per queste carte (verificato — un
+        # tracker di settore segna esplicitamente "No price yet" su ogni
+        # carta). Solo fonti a spazzolata per ora, per intercettare l'hype
+        # del lancio. Aggiungere "cardmarket" con un card_id reale tra
+        # 2-3 settimane, quando ci sarà storico Cardmarket vero.
+        "sources": ["community", "reddit"],
     },
 ]
