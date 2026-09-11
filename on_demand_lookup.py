@@ -74,6 +74,45 @@ class PriceResult:
     url: str
 
 
+def _extract_json(raw_text: str) -> Optional[str]:
+    """
+    I modelli spesso restituiscono JSON avvolto in ```json ... ``` o con
+    testo prima/dopo, anche quando il prompt chiede esplicitamente 'solo
+    JSON' — comportamento comune, non specifico di questo caso. Prova, in
+    ordine: (1) il testo così com'è, (2) dentro un blocco ```json o ```,
+    (3) dal primo '{' all'ultimo '}' nel testo.
+    """
+    raw_text = raw_text.strip()
+
+    try:
+        json.loads(raw_text)
+        return raw_text
+    except json.JSONDecodeError:
+        pass
+
+    import re
+    fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", raw_text, re.DOTALL)
+    if fence_match:
+        candidate = fence_match.group(1)
+        try:
+            json.loads(candidate)
+            return candidate
+        except json.JSONDecodeError:
+            pass
+
+    first_brace = raw_text.find("{")
+    last_brace = raw_text.rfind("}")
+    if first_brace != -1 and last_brace > first_brace:
+        candidate = raw_text[first_brace:last_brace + 1]
+        try:
+            json.loads(candidate)
+            return candidate
+        except json.JSONDecodeError:
+            pass
+
+    return None
+
+
 def parse_response(raw_json: str) -> tuple[List[PriceResult], str]:
     """
     Parsing difensivo: se il modello non rispetta il formato (capita, non è
@@ -81,10 +120,11 @@ def parse_response(raw_json: str) -> tuple[List[PriceResult], str]:
     errore comprensibile invece di un'eccezione che il bot Telegram non sa
     gestire a metà conversazione con l'utente.
     """
-    try:
-        data = json.loads(raw_json)
-    except json.JSONDecodeError:
+    extracted = _extract_json(raw_json)
+    if extracted is None:
         return [], "Non sono riuscito a interpretare la risposta della ricerca. Riprova."
+
+    data = json.loads(extracted)
 
     results = []
     for r in data.get("results", []):
