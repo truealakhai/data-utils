@@ -57,6 +57,7 @@
       "v1|407172399040|0",
       "v1|407199075808|0",
       "v1|800348739435|0",
+      "v1|800531402755|0",
       "v1|800641180912|0",
       "v1|800648850858|0",
       "v1|820118957449|0"
@@ -91,6 +92,7 @@
       "v1|318811801455|0",
       "v1|318849174236|0",
       "v1|318855717528|0",
+      "v1|327246098302|0",
       "v1|336790953361|0",
       "v1|358783843854|0",
       "v1|358807863208|0",
@@ -134,11 +136,11 @@
     "stock:30th_celebration_upc_day:NerdStoreItalia": "sold_out",
     "stock:30th_celebration_upc_day:strategia2.it": null,
     "stock:30th_celebration_upc_day:nickeilashop": "sold_out",
-    "stock:30th_celebration_upc_night:CarteMagic": null,
+    "stock:30th_celebration_upc_night:CarteMagic": "sold_out",
     "stock:30th_celebration_upc_bundle:Baruzcard": "sold_out",
     "stock:30th_celebration_etb:Maximus.be": "sold_out",
     "stock:30th_celebration_etb:Baruzcard": "sold_out",
-    "stock:30th_celebration_etb:mattoncinostore.it": null,
+    "stock:30th_celebration_etb:mattoncinostore.it": "sold_out",
     "stock:30th_celebration_etb:ilcovodelnerd.com": null,
     "stock:30th_celebration_etb:manuelpoke3.it": "sold_out"
   }
