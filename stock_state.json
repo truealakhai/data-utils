@@ -12,8 +12,10 @@
       "v1|147500464620|0",
       "v1|147559686214|0",
       "v1|158278697035|0",
+      "v1|158282307632|0",
       "v1|158284674515|0",
       "v1|178488532413|0",
+      "v1|188602847722|0",
       "v1|188816513635|0",
       "v1|198591325595|0",
       "v1|198626033839|0",
@@ -112,7 +114,10 @@
     "ebay_stock:30th_celebration_upc_night:Pokemon 30th Celebration Ultra Premium Collection Night Umbreon": [
       "v1|198626142692|0"
     ],
-    "ebay_stock:30th_celebration_upc_night:Pokemon 30 Anniversario Ultra Premium Notte Umbreon": []
+    "ebay_stock:30th_celebration_upc_night:Pokemon 30 Anniversario Ultra Premium Notte Umbreon": [
+      "v1|198616532951|0",
+      "v1|267743627537|0"
+    ]
   },
   "evidence": {},
   "last_alerted_band": {},
@@ -124,7 +129,7 @@
     "stock:30th_celebration_upc_bundle:Baruzcard": "sold_out",
     "stock:30th_celebration_etb:Maximus.be": "sold_out",
     "stock:30th_celebration_etb:Baruzcard": "sold_out",
-    "stock:30th_celebration_etb:mattoncinostore.it": null,
+    "stock:30th_celebration_etb:mattoncinostore.it": "sold_out",
     "stock:30th_celebration_etb:ilcovodelnerd.com": null,
     "stock:30th_celebration_etb:manuelpoke3.it": "sold_out"
   }
