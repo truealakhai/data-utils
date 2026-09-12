@@ -50,6 +50,8 @@ def default_http_get(url: str) -> str:
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
             "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
         ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7",
     }
     resp = requests.get(url, timeout=15, headers=headers)
     resp.raise_for_status()
@@ -98,7 +100,10 @@ def check_retailer(
     try:
         html = http_get(url)
         status = extract_stock_status(html)
-    except Exception:
+        if status is None:
+            print(f"  [ATTENZIONE] {retailer_name}: pagina letta ma stato non riconosciuto (euristica da rivedere per questo sito)")
+    except Exception as e:
+        print(f"  [ERRORE] {retailer_name}: {e}")
         status = None
     return StockCheck(product_id, product_name, retailer_name, url, status, date.today())
 
