@@ -52,10 +52,17 @@ STOCK_WATCHLIST = [
 # eBay è diverso dagli altri: non ha una singola pagina prodotto con uno
 # stato "disponibile/esaurito" — ha tante inserzioni di venditori diversi.
 # Qui usiamo la stessa logica di ebay_new_listing_scanner.py (nuove
-# inserzioni = segnale), ma con DUE query per prodotto — una in inglese,
-# una in italiano — perché abbiamo scoperto che usare solo l'inglese perde
-# gran parte del mercato italiano (lezione della sessione: "Elite Trainer
-# Box" vs "Set Allenatore Fuoriclasse").
+# inserzioni + le 3 col prezzo totale più basso, sempre), con DUE query per
+# prodotto — una in inglese, una in italiano — perché abbiamo scoperto che
+# usare solo l'inglese perde gran parte del mercato italiano (lezione della
+# sessione: "Elite Trainer Box" vs "Set Allenatore Fuoriclasse").
+#
+# "ebay_include_any_of"/"ebay_exclude" (opzionali): filtro anti-falsi-
+# positivi, si sommano a EXCLUDE + EBAY_LISTING_EXCLUDE di keywords.py.
+# Qui servono soprattutto a non mischiare ETB/UPC Giorno/UPC Notte tra loro
+# — sono tutti "30° Anniversario" ma sono prodotti diversi con prezzi molto
+# diversi, e le 3 più economiche vanno confrontate solo dentro lo stesso
+# prodotto.
 EBAY_WATCHLIST = [
     {
         "product_id": "30th_celebration_etb",
@@ -64,6 +71,11 @@ EBAY_WATCHLIST = [
             "Pokemon 30th Celebration Elite Trainer Box",
             "Pokemon Set Allenatore Fuoriclasse 30 Anniversario",
         ],
+        "ebay_include_any_of": [
+            ["elite trainer box", "etb", "allenatore fuoriclasse"],
+            ["30th", "30°", "30 anniversario", "celebration"],
+        ],
+        "ebay_exclude": ["scarlet violet", "sword shield", "sun moon", "ultra premium", "upc"],
     },
     {
         "product_id": "30th_celebration_upc_day",
@@ -72,6 +84,11 @@ EBAY_WATCHLIST = [
             "Pokemon 30th Celebration Ultra Premium Collection Day Espeon",
             "Pokemon 30 Anniversario Collezione Ultra Premium Giorno Espeon",
         ],
+        "ebay_include_any_of": [
+            ["ultra premium", "upc"],
+            ["day", "giorno", "espeon"],
+        ],
+        "ebay_exclude": ["scarlet violet", "sword shield", "sun moon", "umbreon", "notte", "night"],
     },
     {
         "product_id": "30th_celebration_upc_night",
@@ -80,5 +97,10 @@ EBAY_WATCHLIST = [
             "Pokemon 30th Celebration Ultra Premium Collection Night Umbreon",
             "Pokemon 30 Anniversario Ultra Premium Notte Umbreon",
         ],
+        "ebay_include_any_of": [
+            ["ultra premium", "upc"],
+            ["night", "notte", "umbreon"],
+        ],
+        "ebay_exclude": ["scarlet violet", "sword shield", "sun moon", "espeon", "giorno", "day"],
     },
 ]

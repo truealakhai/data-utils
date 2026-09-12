@@ -163,6 +163,22 @@ def run_stock_check(watchlist: list, store, clients: dict, send, chat_id: str) -
     return results
 
 
+def _legacy_seen_ids(store, product_id: str, queries: list) -> set:
+    """
+    Prima di questa versione lo stato eBay era tenuto per (product_id,
+    query) separatamente — una chiave per ogni variante linguistica. Ora
+    che le query sono unite in un'unica ricerca per prodotto, questa
+    funzione serve SOLO al primo run dopo l'aggiornamento: unisce gli ID
+    già visti sotto le vecchie chiavi, così le inserzioni già note non
+    vengono ri-segnalate tutte insieme come 'nuove' il giorno del cambio.
+    Le scansioni successive leggono/scrivono solo sulla chiave nuova.
+    """
+    ids = set()
+    for q in queries:
+        ids |= store.get_seen(f"ebay_stock:{product_id}:{q}")
+    return ids
+
+
 def run_ebay_check(
     ebay_watchlist: list,
     store,
@@ -173,18 +189,37 @@ def run_ebay_check(
 ) -> dict:
     """
     eBay è diverso: non c'è una singola pagina con stato disponibile/esaurito,
-    ci sono tante inserzioni di venditori diversi. Qui riusiamo la stessa
-    logica di ebay_new_listing_scanner.py (nuove inserzioni = segnale), ma
-    interrogando PIÙ query per prodotto — tipicamente una in inglese e una
-    in italiano, perché una sola lingua perde gran parte del mercato
-    (lezione di sessione: "Elite Trainer Box" vs "Set Allenatore Fuoriclasse").
+    ci sono tante inserzioni di venditori diversi. Per ogni prodotto:
+
+    1. Uniamo TUTTE le query del prodotto (varianti IT/EN) in un'unica
+       ricerca deduplicata per item_id (search_active_listings_multi) —
+       prima si interrogava una query alla volta e si mandava un messaggio
+       separato per ciascuna, perdendo il quadro d'insieme e mostrando solo
+       una piccola fetta dei match totali per query.
+    2. Filtriamo i falsi positivi con EXCLUDE + EBAY_LISTING_EXCLUDE
+       (keywords.py) più gli eventuali "ebay_include_any_of"/"ebay_exclude"
+       specifici del prodotto in stock_watchlist.py.
+    3. Segnaliamo sia le inserzioni NUOVE (dedup come prima) sia, SEMPRE E
+       A PRESCINDERE da cosa sia già stato visto, le 3 col prezzo totale
+       (prodotto + spedizione) più basso tra quelle rilevanti — così il
+       prezzo migliore non si perde anche quando non è "nuovo".
+
+    Un unico messaggio per prodotto invece di uno per query. Le 'nuove' che
+    non sono anche tra le più economiche restano limitate a 5 per non
+    floodare; le 3 più economiche invece sono sempre incluse per intero —
+    è il segnale che è stato chiesto esplicitamente di garantire.
+
     Se ebay_token è None (credenziali assenti/non ancora pronte), salta
     silenziosamente — stesso comportamento degli altri scanner eBay.
     """
     from ebay_new_listing_scanner import (
-        search_active_listings, find_new_listings, listing_to_evidence,
+        search_active_listings_multi,
+        find_new_listings,
+        filter_relevant_listings,
+        select_cheapest,
         default_http_get as ebay_default_http_get,
     )
+    from keywords import EXCLUDE, EBAY_LISTING_EXCLUDE
 
     results = {}
     if not ebay_token:
@@ -192,27 +227,58 @@ def run_ebay_check(
         return results
 
     for product in ebay_watchlist:
-        for query in product["queries"]:
-            seen_key = f"ebay_stock:{product['product_id']}:{query}"
-            try:
-                listings = search_active_listings(
-                    query, access_token=ebay_token,
-                    http_get=http_get or ebay_default_http_get,
-                )
-            except Exception as e:
-                print(f"  [ERRORE] eBay query '{query}': {e}")
-                continue
+        queries = product["queries"]
+        merged_key = f"ebay_stock:{product['product_id']}"
+        try:
+            listings = search_active_listings_multi(
+                queries, access_token=ebay_token,
+                http_get=http_get or ebay_default_http_get,
+            )
+        except Exception as e:
+            print(f"  [ERRORE] eBay {product['product_name']}: {e}")
+            continue
 
-            seen = store.get_seen(seen_key)
-            new_listings = find_new_listings(listings, seen)
-            store.mark_seen(seen_key, {l.item_id for l in listings})
+        relevant = filter_relevant_listings(
+            listings,
+            exclude_terms=EXCLUDE + EBAY_LISTING_EXCLUDE + product.get("ebay_exclude", []),
+            include_any_of=product.get("ebay_include_any_of", []),
+        )
 
-            if new_listings:
-                lines = [f"🆕 {product['product_name']} — nuove inserzioni eBay ('{query}'):"]
-                for l in new_listings[:5]:  # al massimo 5 per non floodare
-                    lines.append(f"  · {l.title} — {l.price} {l.currency} — {l.url}")
-                send(chat_id, "\n".join(lines))
-            results[seen_key] = f"{len(new_listings)} nuove su {len(listings)} totali"
+        seen = store.get_seen(merged_key) | _legacy_seen_ids(store, product["product_id"], queries)
+        new_listings = find_new_listings(relevant, seen)
+        store.mark_seen(merged_key, {l.item_id for l in relevant})
+
+        cheapest = select_cheapest(relevant, top_n=3)
+        new_ids = {l.item_id for l in new_listings}
+        cheapest_ids = {l.item_id for l in cheapest}
+
+        def _line(l, reason):
+            if l.total_price is not None:
+                price_str = f"{l.total_price:.2f} {l.currency} tot."
+            elif l.price is not None:
+                price_str = f"{l.price} {l.currency} + spedizione n/d"
+            else:
+                price_str = "prezzo n/d"
+            return f"  · [{reason}] {l.title} — {price_str} — {l.url}"
+
+        lines_new_only = [
+            _line(l, "NUOVA") for l in relevant
+            if l.item_id in new_ids and l.item_id not in cheapest_ids
+        ][:5]
+        lines_cheapest = [
+            _line(l, "NUOVA + PREZZO MIGLIORE" if l.item_id in new_ids else "PREZZO MIGLIORE")
+            for l in cheapest
+        ]
+
+        all_lines = lines_new_only + lines_cheapest
+        if all_lines:
+            header = f"🆕 {product['product_name']} — aggiornamento eBay:"
+            send(chat_id, "\n".join([header] + all_lines))
+
+        results[merged_key] = (
+            f"{len(new_listings)} nuove, {len(relevant)} rilevanti su "
+            f"{len(listings)} totali prima del filtro"
+        )
 
     store.save()
     return results
