@@ -13,8 +13,20 @@ import sys
 
 from state_store import StateStore
 from telegram_alerts import make_telegram_sender
-from stock_monitor import run_stock_check, default_http_get
-from stock_watchlist import STOCK_WATCHLIST
+from stock_monitor import run_stock_check, run_ebay_check, default_http_get
+from stock_watchlist import STOCK_WATCHLIST, EBAY_WATCHLIST
+from ebay_new_listing_scanner import get_application_token
+
+
+def build_ebay_token():
+    if not os.environ.get("EBAY_CLIENT_ID") or not os.environ.get("EBAY_CLIENT_SECRET"):
+        print("  [info] Credenziali eBay assenti — controllo eBay disattivato")
+        return None
+    try:
+        return get_application_token(os.environ["EBAY_CLIENT_ID"], os.environ["EBAY_CLIENT_SECRET"])
+    except Exception as e:
+        print(f"  [ERRORE] Autenticazione eBay fallita ({e}) — controllo eBay disattivato")
+        return None
 
 
 def main() -> int:
@@ -28,10 +40,15 @@ def main() -> int:
     send = make_telegram_sender(os.environ["TELEGRAM_BOT_TOKEN"])
     clients = {"http_get": default_http_get}
 
-    print(f"Controllo stock su {len(STOCK_WATCHLIST)} prodotti...")
+    print(f"Controllo stock su {len(STOCK_WATCHLIST)} prodotti (rivenditori diretti)...")
     results = run_stock_check(STOCK_WATCHLIST, store, clients, send, os.environ["TELEGRAM_CHAT_ID"])
-
     for key, outcome in results.items():
+        print(f"  {key}: {outcome}")
+
+    print(f"Controllo eBay su {len(EBAY_WATCHLIST)} prodotti...")
+    ebay_token = build_ebay_token()
+    ebay_results = run_ebay_check(EBAY_WATCHLIST, store, ebay_token, send, os.environ["TELEGRAM_CHAT_ID"])
+    for key, outcome in ebay_results.items():
         print(f"  {key}: {outcome}")
 
     return 0

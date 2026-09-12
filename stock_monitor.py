@@ -158,6 +158,61 @@ def run_stock_check(watchlist: list, store, clients: dict, send, chat_id: str) -
     return results
 
 
+def run_ebay_check(
+    ebay_watchlist: list,
+    store,
+    ebay_token: Optional[str],
+    send,
+    chat_id: str,
+    http_get=None,
+) -> dict:
+    """
+    eBay è diverso: non c'è una singola pagina con stato disponibile/esaurito,
+    ci sono tante inserzioni di venditori diversi. Qui riusiamo la stessa
+    logica di ebay_new_listing_scanner.py (nuove inserzioni = segnale), ma
+    interrogando PIÙ query per prodotto — tipicamente una in inglese e una
+    in italiano, perché una sola lingua perde gran parte del mercato
+    (lezione di sessione: "Elite Trainer Box" vs "Set Allenatore Fuoriclasse").
+    Se ebay_token è None (credenziali assenti/non ancora pronte), salta
+    silenziosamente — stesso comportamento degli altri scanner eBay.
+    """
+    from ebay_new_listing_scanner import (
+        search_active_listings, find_new_listings, listing_to_evidence,
+        default_http_get as ebay_default_http_get,
+    )
+
+    results = {}
+    if not ebay_token:
+        print("  [info] eBay senza token valido — salto il controllo eBay per lo stock")
+        return results
+
+    for product in ebay_watchlist:
+        for query in product["queries"]:
+            seen_key = f"ebay_stock:{product['product_id']}:{query}"
+            try:
+                listings = search_active_listings(
+                    query, access_token=ebay_token,
+                    http_get=http_get or ebay_default_http_get,
+                )
+            except Exception as e:
+                print(f"  [ERRORE] eBay query '{query}': {e}")
+                continue
+
+            seen = store.get_seen(seen_key)
+            new_listings = find_new_listings(listings, seen)
+            store.mark_seen(seen_key, {l.item_id for l in listings})
+
+            if new_listings:
+                lines = [f"🆕 {product['product_name']} — nuove inserzioni eBay ('{query}'):"]
+                for l in new_listings[:5]:  # al massimo 5 per non floodare
+                    lines.append(f"  · {l.title} — {l.price} {l.currency} — {l.url}")
+                send(chat_id, "\n".join(lines))
+            results[seen_key] = f"{len(new_listings)} nuove su {len(listings)} totali"
+
+    store.save()
+    return results
+
+
 if __name__ == "__main__":
     # Frammenti REALI osservati oggi stesso durante le ricerche (non inventati)
     real_nerdstoreitalia_fragment = """

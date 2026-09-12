@@ -30,6 +30,7 @@ import base64
 from dataclasses import dataclass
 from datetime import date
 from typing import Callable, List, Optional, Set
+from urllib.parse import quote_plus
 
 from scoring import Evidence, SourceType
 
@@ -95,7 +96,7 @@ def search_active_listings(
         "Authorization": f"Bearer {access_token}",
         "X-EBAY-C-MARKETPLACE-ID": marketplace_id,
     }
-    url = f"{SEARCH_URL}?q={query}&limit={limit}"
+    url = f"{SEARCH_URL}?q={quote_plus(query)}&limit={limit}"
     data = http_get(url, headers)
 
     listings = []
