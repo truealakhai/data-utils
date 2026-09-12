@@ -61,18 +61,72 @@ def adapter_riftbound(item: dict, clients: dict, store: StateStore) -> List[Evid
 
 
 def adapter_ebay_new_listings(item: dict, clients: dict, store: StateStore) -> List[Evidence]:
+    """
+    Due segnali distinti, entrambi restituiti come evidence:
+    1. NUOVE inserzioni rispetto all'ultima scansione (comportamento
+       originale, dedup su seen_item_ids).
+    2. Le 3 inserzioni col prezzo totale (prodotto + spedizione) più basso
+       tra quelle rilevanti — SEMPRE, a prescindere da seen_item_ids: anche
+       se già viste, restano il "miglior prezzo attuale" finché qualcosa di
+       più economico non le spodesta.
+    Una stessa inserzione può soddisfare entrambi i criteri; in quel caso
+    genera UNA sola evidence con reason combinata, non due.
+
+    "ebay_queries" (se presente in watchlist.py) permette di cercare più
+    varianti della stessa query (nomi IT/EN) — unite e deduplicate per
+    item_id da search_active_listings_multi. Il filtro anti-falsi-positivi
+    (EXCLUDE + EBAY_LISTING_EXCLUDE di keywords.py, più eventuali
+    ebay_include_any_of/ebay_exclude specifici del prodotto in watchlist.py)
+    è applicato PRIMA sia della dedup sia della selezione prezzo più basso,
+    quindi un'inserzione scartata come falso positivo non conta per nessuno
+    dei due segnali né consuma spazio nello stato persistito.
+    """
     if not clients.get("ebay_token"):
         print(f"  [info] eBay senza token valido — salto ebay_new_listings su {item['claim_id']}")
         return []
-    from ebay_new_listing_scanner import search_active_listings, find_new_listings, listing_to_evidence
-    listings = search_active_listings(
-        item["query"], access_token=clients["ebay_token"], http_get=clients["ebay_http_get"],
+    from ebay_new_listing_scanner import (
+        search_active_listings_multi,
+        find_new_listings,
+        filter_relevant_listings,
+        select_cheapest,
+        listing_to_evidence,
     )
+    from keywords import EXCLUDE, EBAY_LISTING_EXCLUDE
+
+    queries = item.get("ebay_queries") or [item["query"]]
+    listings = search_active_listings_multi(
+        queries, access_token=clients["ebay_token"], http_get=clients["ebay_http_get"],
+    )
+
+    relevant = filter_relevant_listings(
+        listings,
+        exclude_terms=EXCLUDE + EBAY_LISTING_EXCLUDE + item.get("ebay_exclude", []),
+        include_any_of=item.get("ebay_include_any_of", []),
+    )
+
     seen_key = f"ebay:{item['claim_id']}"
     seen = store.get_seen(seen_key)
-    new = find_new_listings(listings, seen)
-    store.mark_seen(seen_key, {l.item_id for l in listings})
-    return [listing_to_evidence(l) for l in new]
+    new = find_new_listings(relevant, seen)
+    store.mark_seen(seen_key, {l.item_id for l in relevant})
+
+    cheapest = select_cheapest(relevant, top_n=3)
+    new_ids = {l.item_id for l in new}
+    cheapest_ids = {l.item_id for l in cheapest}
+
+    evidence = []
+    for listing in relevant:
+        is_new = listing.item_id in new_ids
+        is_cheapest = listing.item_id in cheapest_ids
+        if not is_new and not is_cheapest:
+            continue
+        if is_new and is_cheapest:
+            reason = "NUOVA + PREZZO MIGLIORE"
+        elif is_new:
+            reason = "NUOVA"
+        else:
+            reason = "PREZZO MIGLIORE"
+        evidence.append(listing_to_evidence(listing, reason=reason))
+    return evidence
 
 
 PER_PRODUCT_ADAPTERS: Dict[str, Callable] = {

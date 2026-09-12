@@ -260,7 +260,18 @@ def find_new_listings(listings: List[EbayListing], seen_item_ids: Set[str]) -> L
     return [l for l in listings if l.item_id not in seen_item_ids]
 
 
-def listing_to_evidence(listing: EbayListing, observed_on: Optional[date] = None) -> Evidence:
+def listing_to_evidence(
+    listing: EbayListing,
+    observed_on: Optional[date] = None,
+    reason: Optional[str] = None,
+) -> Evidence:
+    """
+    reason: etichetta opzionale anteposta alla nota (es. "NUOVA",
+    "PREZZO MIGLIORE", "NUOVA + PREZZO MIGLIORE") — serve a chi legge
+    l'alert a capire SUBITO perché questa inserzione gli viene segnalata,
+    invece di doverlo dedurre. Chi chiama questa funzione (orchestrator.py)
+    decide l'etichetta in base a quale logica ha selezionato l'inserzione.
+    """
     if listing.price is None:
         price_str = "prezzo n/d"
     elif listing.shipping_cost is None:
@@ -270,12 +281,13 @@ def listing_to_evidence(listing: EbayListing, observed_on: Optional[date] = None
             f"{listing.price} {listing.currency} + {listing.shipping_cost} "
             f"{listing.currency} sped. = {listing.total_price:.2f} {listing.currency} tot."
         )
+    tag = f"[{reason}] " if reason else ""
     return Evidence(
         source_type=SourceType.LISTING_CLAIM,
         source_name=f"eBay - inserzione ({listing.seller})",
         observed_on=observed_on or date.today(),
         url=listing.url,
-        note=f"'{listing.title}' — {price_str} — venditore: {listing.seller}",
+        note=f"{tag}'{listing.title}' — {price_str} — venditore: {listing.seller}",
     )
 
 

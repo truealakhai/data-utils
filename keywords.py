@@ -56,3 +56,17 @@ EXCLUDE = [
     "duel links", "master duel", "tag force", "efootball",
     "correction", "printing error", "qualifying points",
 ]
+
+# Falsi positivi specifici delle INSERZIONI eBay (usati da
+# ebay_new_listing_scanner.py tramite orchestrator.adapter_ebay_new_listings),
+# non delle notizie a spazzolata sopra. Termini generici che segnalano che
+# l'inserzione NON è il prodotto originale/sigillato cercato, a prescindere
+# dal gioco — combinati con EXCLUDE e con eventuali esclusioni specifiche del
+# singolo prodotto in watchlist.py (campo "ebay_exclude"). Come per EXCLUDE:
+# basta un solo termine trovato nel titolo per scartare l'inserzione, a
+# prescindere da quanti segnali positivi ci siano altrove.
+EBAY_LISTING_EXCLUDE = [
+    "proxy", "custom", "fanmade", "fan made", "fan art", "replica",
+    "sleeve", "playmat", "deck box", "binder", "display case",
+    "digital code", "online code", "code card only",
+]
