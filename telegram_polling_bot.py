@@ -33,11 +33,55 @@ import time
 import requests
 
 from on_demand_lookup import query_product, SYSTEM_PROMPT
+from ebay_sold_scanner import default_http_get as ebay_sold_http_get
+
+# Schema del tool forzato — invece di chiedere "rispondi solo in JSON" (un
+# modello può non seguirlo sempre, come abbiamo visto in un test reale: una
+# query ha ricevuto una risposta in prosa, zero JSON), costringiamo Claude a
+# chiamare QUESTO tool per riportare i risultati. Con tool_choice forzato,
+# l'API garantisce che gli argomenti rispettino lo schema — non serve più
+# indovinare/estrarre JSON da testo libero.
+REPORT_FINDINGS_TOOL = {
+    "name": "report_findings",
+    "description": "Riporta i risultati della ricerca di prezzo nel formato richiesto.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "results": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "marketplace": {"type": "string"},
+                        "price": {"type": "number"},
+                        "currency": {"type": "string"},
+                        "date": {"type": "string", "description": "formato YYYY-MM-DD"},
+                        "confirmed_sold": {"type": "boolean"},
+                        "condition": {"type": "string"},
+                        "url": {"type": "string"},
+                    },
+                    "required": ["marketplace", "price", "currency", "date", "confirmed_sold", "url"],
+                },
+            },
+            "summary_it": {
+                "type": "string",
+                "description": "Riassunto in una frase in italiano di quello che hai trovato.",
+            },
+        },
+        "required": ["results", "summary_it"],
+    },
+}
 
 
 class RealAnthropicClient:
-    """Implementazione vera dell'interfaccia AnthropicClient di
-    on_demand_lookup.py — quella che finora era testata solo con un fake."""
+    """
+    Implementazione vera dell'interfaccia AnthropicClient di
+    on_demand_lookup.py. Flusso in due passaggi:
+    1) Claude cerca liberamente sul web (stessa richiesta di prima).
+    2) Un secondo messaggio, con tool_choice FORZATO su report_findings,
+       gli chiede di riportare quello che ha trovato — qui il formato è
+       garantito dallo schema, non da un'istruzione testuale sperabile.
+    """
 
     def __init__(self, api_key: str, model: str = "claude-sonnet-5"):
         import anthropic
@@ -45,14 +89,37 @@ class RealAnthropicClient:
         self._model = model
 
     def search_product_prices(self, query: str, days_back: int) -> str:
-        response = self._client.messages.create(
+        import json as _json
+
+        search_messages = [
+            {"role": "user", "content": f"Cerca vendite concluse recenti per: {query}"},
+        ]
+        search_response = self._client.messages.create(
             model=self._model,
             max_tokens=2048,
             system=SYSTEM_PROMPT.format(days_back=days_back),
-            messages=[{"role": "user", "content": f"Cerca vendite concluse recenti per: {query}"}],
-            tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}],
+            messages=search_messages,
+            tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 10}],
         )
-        return "".join(block.text for block in response.content if block.type == "text")
+
+        report_messages = search_messages + [
+            {"role": "assistant", "content": search_response.content},
+            {"role": "user", "content": "Ora riporta i risultati trovati chiamando report_findings."},
+        ]
+        report_response = self._client.messages.create(
+            model=self._model,
+            max_tokens=1024,
+            messages=report_messages,
+            tools=[REPORT_FINDINGS_TOOL],
+            tool_choice={"type": "tool", "name": "report_findings"},
+        )
+
+        for block in report_response.content:
+            if block.type == "tool_use" and block.name == "report_findings":
+                return _json.dumps(block.input)
+
+        # Non dovrebbe succedere con tool_choice forzato, ma niente crash se capita.
+        return _json.dumps({"results": [], "summary_it": "Non sono riuscito a strutturare i risultati."})
 
 
 def get_updates(bot_token: str, offset: int, timeout: int = 30) -> list:
@@ -89,7 +156,7 @@ def run_polling_loop(bot_token: str, client: RealAnthropicClient) -> None:
                 continue  # ignora comandi tipo /start per questo test minimale
             print(f"[ricevuto] chat={chat_id}: {text!r} — cerco...")
             try:
-                reply = query_product(client, text, days_back=90)
+                reply = query_product(client, text, days_back=90, ebay_http_get=ebay_sold_http_get)
             except Exception as e:
                 reply = f"Errore durante la ricerca: {e}"
             send_message(bot_token, chat_id, reply)

@@ -96,6 +96,14 @@ class StateStore:
     def set_last_alerted_band(self, claim_id: str, band: str) -> None:
         self._data["last_alerted_band"][claim_id] = band
 
+    # --- stato di stock per prodotto+rivenditore (stock_monitor.py) ---
+
+    def get_stock_status(self, key: str) -> Optional[str]:
+        return self._data.setdefault("stock_status", {}).get(key)
+
+    def set_stock_status(self, key: str, status: Optional[str]) -> None:
+        self._data.setdefault("stock_status", {})[key] = status
+
 
 if __name__ == "__main__":
     import os

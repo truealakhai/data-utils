@@ -39,8 +39,18 @@ Regole:
 - Riporta SOLO transazioni che puoi confermare come concluse (stato "sold",
   "venduto", asta terminata con vincitore) — mai un prezzo di richiesta
   spacciato per vendita.
+- ATTENZIONE: nei frammenti di ricerca su un'inserzione eBay, il numero che
+  vedi accanto potrebbe essere il COSTO DI SPEDIZIONE, non il prezzo della
+  carta — se non è chiaro quale sia quale, non riportarlo come prezzo di
+  vendita. Apri/verifica la pagina reale prima di usare quel numero.
 - Se trovi solo prezzi di richiesta, riportali comunque ma etichettali
   chiaramente come tali, non come vendite.
+- Se una carta è nota per un identificatore preciso (codice set + numero,
+  es. "FND-196"), prova quello ESPLICITAMENTE come query separata, non solo
+  il nome descrittivo — i venditori (spesso internazionali) usano il codice
+  in modo molto più coerente di descrizioni tradotte o generiche.
+- Prova almeno 2-3 formulazioni diverse della ricerca prima di concludere che
+  non c'è nulla — una singola query che non trova risultati non basta.
 - Ogni risultato deve avere una URL verificabile.
 - Se non trovi nulla di verificabile, di' esplicitamente che non hai trovato
   vendite concluse recenti, non inventare un prezzo plausibile.
@@ -163,17 +173,38 @@ def query_product(
     product_query: str,
     days_back: int = 90,
     claim_id: Optional[str] = None,
+    ebay_http_get=None,
 ) -> str:
     """
     Funzione principale da collegare al comando Telegram. Ritorna il testo
     già pronto da mandare in risposta all'utente.
+
+    ebay_http_get: se fornito, interroga PRIMA il filtro "Venduti" di eBay
+    direttamente (ebay_sold_scanner.py) — dati reali, non mediati da una
+    ricerca web generica che spesso non li trova (scoperto insieme
+    all'utente confrontando i risultati). Se None, salta questo passaggio
+    e si affida solo alla ricerca di Claude, come prima.
     """
+    ebay_evidences = []
+    if ebay_http_get is not None:
+        try:
+            from ebay_sold_scanner import fetch_sold_listings, listing_to_evidence
+            listings = fetch_sold_listings(product_query, tld="it", http_get=ebay_http_get)
+            ebay_evidences = [listing_to_evidence(l) for l in listings if l.price > 0]
+        except Exception as e:
+            print(f"  [info] eBay diretto non disponibile ({e}), procedo solo con la ricerca Claude")
+
     raw = client.search_product_prices(
         query=product_query,
         days_back=days_back,
     )
     results, summary = parse_response(raw)
-    evidences = results_to_evidences(results)
+    claude_evidences = results_to_evidences(results)
+
+    # Deduplica per URL: se Claude ha trovato la STESSA inserzione che
+    # abbiamo già da eBay diretto, non contarla due volte.
+    seen_urls = {e.url for e in ebay_evidences}
+    evidences = ebay_evidences + [e for e in claude_evidences if e.url not in seen_urls]
 
     if not evidences:
         return f"🔍 {product_query}\n\n{summary or 'Nessuna vendita conclusa verificabile trovata negli ultimi ' + str(days_back) + ' giorni.'}"
@@ -181,12 +212,16 @@ def query_product(
     claim_id = claim_id or product_query.lower().replace(" ", "_")
     score = score_claim(claim_id, evidences, as_of=date.today())
 
-    lines = [f"🔍 {product_query}", "", summary, ""]
+    lines = [f"🔍 {product_query}", ""]
+    if ebay_evidences:
+        lines.append(f"({len(ebay_evidences)} vendite trovate direttamente su eBay)")
+    lines.append(summary or "")
+    lines.append("")
     lines.append(f"Affidabilità: {score.band} ({score.score:.0f}/100)")
     lines.append("")
-    for ev, r in zip(evidences, results):
-        tag = "✅ venduto" if r.confirmed_sold else "💬 richiesta"
-        lines.append(f"{tag} — {r.price} {r.currency} su {r.marketplace} ({r.sale_date}) — {r.url}")
+    for ev in evidences:
+        tag = "✅ venduto" if ev.source_type == SourceType.SOLD_COMP else "💬 richiesta"
+        lines.append(f"{tag} — {ev.note} ({ev.observed_on}) — {ev.url}")
 
     return "\n".join(lines)
 
@@ -239,3 +274,28 @@ if __name__ == "__main__":
     print("=" * 70)
     response2 = query_product(client, "Carta Inesistente XYZ", days_back=90)
     print(response2)
+
+    print()
+    print("=" * 70)
+    print("Combinazione: eBay diretto (dati REALI dai tuoi screenshot) + Claude")
+    print("=" * 70)
+
+    def fake_ebay_http(url: str) -> str:
+        # HTML minimale nel formato li.s-item, con i valori REALI che hai mandato
+        return """<html><body>
+        <li class="s-item">
+          <a class="s-item__link" href="https://www.ebay.it/itm/aaa"></a>
+          <div class="s-item__title">2025 RIFTBOUND LEAGUE OF LEGENDS CARTA EVENTO CAPODANNO CINESE TEEMO</div>
+          <span class="s-item__price">EUR 2.928,01</span>
+          <span class="s-item__caption">23 ago 2026</span>
+        </li>
+        <li class="s-item">
+          <a class="s-item__link" href="https://www.ebay.it/itm/bbb"></a>
+          <div class="s-item__title">League of Legends Gioco di Carte Arcano Cinese LOL Riftbound Teemo FND.196/298Promo</div>
+          <span class="s-item__price">US $459.99</span>
+          <span class="s-item__caption">19 ago 2026</span>
+        </li>
+        </body></html>"""
+
+    response3 = query_product(client, "Riftbound Teemo capodanno", days_back=90, ebay_http_get=fake_ebay_http)
+    print(response3)

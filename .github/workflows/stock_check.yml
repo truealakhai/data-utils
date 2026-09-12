@@ -1,0 +1,35 @@
+name: TCG Seeker - Controllo Stock
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'  # ogni 20 minuti — cambia se vuoi più/meno frequente
+  workflow_dispatch:
+
+jobs:
+  stock_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installa dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Controlla stock
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python stock_check_main.py
+
+      - name: Commit dello stato stock aggiornato
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stock_state.json
+          git diff --staged --quiet && echo "Nessuna modifica" || git commit -m "Aggiorna stato stock $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
