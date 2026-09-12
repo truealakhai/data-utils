@@ -24,6 +24,7 @@
       "v1|198626034093|0",
       "v1|198626034105|0",
       "v1|198627687116|0",
+      "v1|198637045896|0",
       "v1|206431121474|0",
       "v1|206521383698|0",
       "v1|206527450668|0",
@@ -138,11 +139,11 @@
     "stock:30th_celebration_upc_day:NerdStoreItalia": "sold_out",
     "stock:30th_celebration_upc_day:strategia2.it": null,
     "stock:30th_celebration_upc_day:nickeilashop": "sold_out",
-    "stock:30th_celebration_upc_night:CarteMagic": "sold_out",
+    "stock:30th_celebration_upc_night:CarteMagic": null,
     "stock:30th_celebration_upc_bundle:Baruzcard": "sold_out",
     "stock:30th_celebration_etb:Maximus.be": "sold_out",
     "stock:30th_celebration_etb:Baruzcard": "sold_out",
-    "stock:30th_celebration_etb:mattoncinostore.it": "sold_out",
+    "stock:30th_celebration_etb:mattoncinostore.it": null,
     "stock:30th_celebration_etb:ilcovodelnerd.com": null,
     "stock:30th_celebration_etb:manuelpoke3.it": "sold_out"
   }
