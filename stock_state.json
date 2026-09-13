@@ -281,7 +281,7 @@
   "stock_status": {
     "stock:30th_celebration_upc_day:NerdStoreItalia": "sold_out",
     "stock:30th_celebration_upc_day:strategia2.it": null,
-    "stock:30th_celebration_upc_day:nickeilashop": null,
+    "stock:30th_celebration_upc_day:nickeilashop": "sold_out",
     "stock:30th_celebration_upc_night:CarteMagic": "sold_out",
     "stock:30th_celebration_upc_bundle:Baruzcard": "sold_out",
     "stock:30th_celebration_etb:Maximus.be": "available",
