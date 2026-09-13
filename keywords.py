@@ -69,4 +69,7 @@ EBAY_LISTING_EXCLUDE = [
     "proxy", "custom", "fanmade", "fan made", "fan art", "replica",
     "sleeve", "playmat", "deck box", "binder", "display case",
     "digital code", "online code", "code card only",
+    # Falso positivo osservato in sessione: un'inserzione per una copertina
+    # rigida/raccoglitore a tema, non il prodotto sigillato originale.
+    "hard cover", "hardcover", "copertina rigida",
 ]

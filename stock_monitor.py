@@ -179,6 +179,16 @@ def _legacy_seen_ids(store, product_id: str, queries: list) -> set:
     return ids
 
 
+def _cheapest_signature(listings) -> str:
+    """
+    Rappresentazione stabile e indipendente dall'ordine delle inserzioni
+    passate (di norma le 3 più economiche) — usata SOLO per confrontare
+    "sono le stesse del post precedente", non per confrontare i prezzi.
+    Se anche un solo item_id cambia, la stringa cambia.
+    """
+    return ",".join(sorted(l.item_id for l in listings))
+
+
 def run_ebay_check(
     ebay_watchlist: list,
     store,
@@ -203,11 +213,25 @@ def run_ebay_check(
        A PRESCINDERE da cosa sia già stato visto, le 3 col prezzo totale
        (prodotto + spedizione) più basso tra quelle rilevanti — così il
        prezzo migliore non si perde anche quando non è "nuovo".
+    4. MA se le 3 più economiche sono ESATTAMENTE le stesse (stessi 3
+       item_id, ordine ignorato) dell'ultimo post in cui le abbiamo
+       pubblicate, il segnale "PREZZO MIGLIORE" viene saltato per intero
+       in questo giro — niente ripetizioni identiche. Se anche solo UNA
+       delle 3 cambia, si ripubblicano tutte e 3 (non solo la differenza):
+       è una scelta esplicita, il messaggio deve restare "il quadro
+       completo attuale", non un diff da ricostruire a mano. Lo snapshot
+       di confronto (store.get_stock_status/set_stock_status, chiave
+       "ebay_stock_cheapest:<product_id>") si aggiorna SOLO quando il
+       segnale viene effettivamente pubblicato — un giro saltato non
+       sposta il riferimento, quindi un cambiamento successivo viene
+       comunque rilevato rispetto all'ultimo post reale, non all'ultimo
+       calcolo. Le eventuali inserzioni "NUOVA" ma fuori dalle 3 più
+       economiche non sono toccate da questa regola: continuano ad
+       arrivare ogni volta che compaiono, a prescindere dal prezzo.
 
     Un unico messaggio per prodotto invece di uno per query. Le 'nuove' che
     non sono anche tra le più economiche restano limitate a 5 per non
-    floodare; le 3 più economiche invece sono sempre incluse per intero —
-    è il segnale che è stato chiesto esplicitamente di garantire.
+    floodare.
 
     Se ebay_token è None (credenziali assenti/non ancora pronte), salta
     silenziosamente — stesso comportamento degli altri scanner eBay.
@@ -265,19 +289,31 @@ def run_ebay_check(
             _line(l, "NUOVA") for l in relevant
             if l.item_id in new_ids and l.item_id not in cheapest_ids
         ][:5]
-        lines_cheapest = [
-            _line(l, "NUOVA + PREZZO MIGLIORE" if l.item_id in new_ids else "PREZZO MIGLIORE")
-            for l in cheapest
-        ]
+
+        cheapest_key = f"ebay_stock_cheapest:{product['product_id']}"
+        cheapest_signature = _cheapest_signature(cheapest)
+        last_published_signature = store.get_stock_status(cheapest_key)
+        cheapest_unchanged = bool(cheapest) and cheapest_signature == last_published_signature
+
+        if cheapest_unchanged:
+            lines_cheapest = []
+        else:
+            lines_cheapest = [
+                _line(l, "NUOVA + PREZZO MIGLIORE" if l.item_id in new_ids else "PREZZO MIGLIORE")
+                for l in cheapest
+            ]
 
         all_lines = lines_new_only + lines_cheapest
         if all_lines:
             header = f"🆕 {product['product_name']} — aggiornamento eBay:"
             send(chat_id, "\n".join([header] + all_lines))
+            if lines_cheapest:
+                store.set_stock_status(cheapest_key, cheapest_signature)
 
         results[merged_key] = (
             f"{len(new_listings)} nuove, {len(relevant)} rilevanti su "
             f"{len(listings)} totali prima del filtro"
+            + (" (prezzo migliore invariato dal post precedente, saltato)" if cheapest_unchanged else "")
         )
 
     store.save()
