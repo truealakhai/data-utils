@@ -268,6 +268,8 @@
       "/news/2026/10-September-2026.shtml",
       "/news/2026/11-September-2026.shtml",
       "/news/2026/12-September-2026.shtml",
+      "/news/2026/13-September-2026.shtml",
+      "/news/2026/14-September-2026.shtml",
       "/news/2026/27-August-2026.shtml",
       "/news/2026/28-August-2026.shtml",
       "/news/2026/29-August-2026.shtml",
@@ -336,6 +338,7 @@
       "/pokemongoita",
       "/pokemonhome/",
       "/pokemonmasters/",
+      "/pokemonmasters/events/7yearanniversarysupersparring.shtml",
       "/pokemonmasters/events/cynthia&glaceonmissions.shtml",
       "/pokemonmasters/events/flyinganddarkconqueror.shtml",
       "/pokemonmasters/events/megaevolutionparty.shtml",
@@ -368,6 +371,7 @@
       "/pokemonsleep/",
       "/pokemonsleep/berries/verybigmagoberry.shtml",
       "/pokemonsleep/events/minisnapshotsurprisemissions.shtml",
+      "/pokemonsleep/events/unexploredrealmresearchpursuemewtwo.shtml",
       "/pokemonsleep/goodsleepday/august2026.shtml",
       "/pokemonsleep/newmoonday/september2026.shtml",
       "/pokemonsmile/",
@@ -466,7 +470,8 @@
       "https://www.pokebeach.com/2026/09/30th-celebration-english-set-guide-full-card-list-products-store-promotions-and-more",
       "https://www.pokebeach.com/2026/09/30th-celebration-full-set-list-revealed-for-japan-features-176-cards",
       "https://www.pokebeach.com/2026/09/maushold-illustration-rare-revealed-from-30th-celebration",
-      "https://www.pokebeach.com/2026/09/mew-rgb-secret-rares-pulled-from-30th-celebration"
+      "https://www.pokebeach.com/2026/09/mew-rgb-secret-rares-pulled-from-30th-celebration",
+      "https://www.pokebeach.com/2026/09/the-top-5-decks-after-worlds"
     ],
     "reddit": [],
     "konami": [
@@ -503,9 +508,12 @@
       "/en-us/news/rules-and-releases/vendetta-rules-faq-and-clarifications"
     ],
     "ebay:jinx_riftbound_prezzo": [
+      "v1|126908104070|0",
       "v1|127973333761|0",
       "v1|128066917437|0",
       "v1|128071208462|0",
+      "v1|128077831266|0",
+      "v1|137599534733|435692452060",
       "v1|137599534733|435692452061",
       "v1|137631100914|0",
       "v1|147340566685|0",
@@ -528,15 +536,22 @@
       "v1|227487953509|0",
       "v1|236937815765|0",
       "v1|267778667984|0",
+      "v1|267782431325|0",
+      "v1|278370716640|0",
       "v1|287521304334|0",
       "v1|287580326685|0",
       "v1|287580327364|0",
+      "v1|298666976912|0",
       "v1|298667718404|0",
+      "v1|307177842566|0",
+      "v1|315877485583|614348457171",
       "v1|318834294585|0",
       "v1|326438050343|0",
       "v1|326535759159|0",
       "v1|358093075768|626893686762",
       "v1|365330064066|635105555680",
+      "v1|366039804003|0",
+      "v1|366647217382|0",
       "v1|377487140528|0",
       "v1|377491987675|0",
       "v1|377491988500|0",
@@ -545,7 +560,10 @@
       "v1|407172959613|0",
       "v1|407200259008|0",
       "v1|407204537746|0",
+      "v1|407214821000|0",
       "v1|800267084312|0",
+      "v1|800657435426|0",
+      "v1|820092512670|0",
       "v1|820094581577|0",
       "v1|820099755783|0",
       "v1|820108468729|0",
@@ -557,22 +575,32 @@
       "v1|398329606075|0"
     ],
     "ebay:pokemon_30th_etb_launch": [
+      "v1|117409069225|0",
       "v1|128030796305|0",
       "v1|128050325499|0",
       "v1|128075736325|0",
+      "v1|137723444000|0",
+      "v1|137734162977|0",
       "v1|147500464620|0",
+      "v1|147562571448|0",
       "v1|158281312715|0",
       "v1|158282307632|0",
       "v1|158286434135|0",
       "v1|168672236360|0",
       "v1|168676925016|0",
       "v1|168678527999|0",
+      "v1|168686089229|0",
+      "v1|168686146759|0",
+      "v1|168686303849|0",
       "v1|178488532413|0",
+      "v1|178488814215|0",
       "v1|188681413042|0",
       "v1|188816513635|0",
       "v1|188912362852|0",
       "v1|198591325595|0",
       "v1|198626033839|0",
+      "v1|198639954902|0",
+      "v1|206390382244|0",
       "v1|206431121474|0",
       "v1|206521383698|0",
       "v1|206527450668|0",
@@ -588,19 +616,26 @@
       "v1|237061861542|0",
       "v1|237062688408|0",
       "v1|237062693079|0",
+      "v1|237066578515|0",
       "v1|257734988803|0",
       "v1|257739039764|0",
       "v1|267780072917|0",
+      "v1|278372843960|0",
       "v1|287525132915|0",
       "v1|287540211330|0",
       "v1|287578006957|0",
+      "v1|287580669590|0",
       "v1|287582829188|0",
       "v1|298653329747|0",
       "v1|298659012447|0",
       "v1|298659013825|0",
       "v1|298661762393|0",
+      "v1|298663960110|0",
       "v1|298664178019|0",
       "v1|298667099467|0",
+      "v1|298671802750|0",
+      "v1|307171677721|0",
+      "v1|307174261475|0",
       "v1|307175881228|0",
       "v1|318593015629|0",
       "v1|318663007595|0",
@@ -612,11 +647,16 @@
       "v1|318855717528|0",
       "v1|318858480229|0",
       "v1|318862595414|0",
+      "v1|318867648043|0",
+      "v1|318867970902|0",
+      "v1|327356610720|0",
       "v1|336737426481|0",
       "v1|336761390623|0",
+      "v1|336789904958|0",
       "v1|336790070673|0",
       "v1|336790075050|0",
       "v1|336790953361|0",
+      "v1|336792349419|0",
       "v1|358783843854|0",
       "v1|366637988274|0",
       "v1|366657483119|0",
@@ -624,12 +664,16 @@
       "v1|366664387839|0",
       "v1|377394321596|0",
       "v1|377479108473|0",
+      "v1|377482783767|0",
       "v1|377486162348|0",
       "v1|377488287971|0",
       "v1|377491856313|0",
+      "v1|377494120974|0",
       "v1|398205028183|0",
       "v1|398220533374|0",
+      "v1|398238464493|0",
       "v1|398354987965|0",
+      "v1|398381798411|0",
       "v1|407172399040|0",
       "v1|407174270859|0",
       "v1|407192454684|0",
@@ -644,12 +688,15 @@
       "v1|800648576513|0",
       "v1|800648850858|0",
       "v1|800652212795|0",
+      "v1|800654427808|657551059194",
       "v1|820091986417|0",
+      "v1|820101696000|0",
       "v1|820109296106|0",
       "v1|820113225214|0",
       "v1|820114754393|0",
       "v1|820119145095|0",
-      "v1|820120580655|0"
+      "v1|820120580655|0",
+      "v1|820124153933|0"
     ],
     "ebay:pokemon_30th_upc_day_launch": [
       "v1|407063813552|0"
@@ -1045,6 +1092,110 @@
         "observed_on": "2026-09-13",
         "url": "https://www.ebay.it/itm/177910761995?_skw=Jinx&hash=item296c4eca0b:g:VuUAAeSwAWlpmHSJ&amdata=enc%3AAQALAAAA4ACCtXRWQnOEpyOqnQQ8KGaEGGEVloPJH4tjfMigh4dUvPrYQ91OtnFwLZvwkntSqWv5v6N0YoMSxBQvvaxl4Rx5rcRhMN20%2FXZdRFcYGtnzpsQYJAGm6BBxYDmKlPBnripMi1QkOvhPmU%2FA7vLZ%2Fz9MfSEVix1SqrAVQgjS2UT6T%2B5anAItYtqeE9qxbganX5cMFQHo6v4t3163eBwGT7r9BGnWvYnWFX4R2%2Bp4wN2ztlYZJ798G%2B4ZmAx2098gczbkUuq4J5xyRedR1m1J%2F2gLGaklOVSsXwQJ9unM1cz5",
         "note": "[NUOVA] 'Funko pop Games League of legends JINX 05 DRM170323 !!!!' — 59.0 EUR + 6.0 EUR sped. = 65.00 EUR tot. — venditore: grailway_shop",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (josefr-68)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/307177842566?_skw=Jinx&hash=item478539e786:g:xUEAAeSwfEhqpzAV",
+        "note": "[NUOVA] 'Green Lite The Go EP 12-Inch Black Vinyl EP Jinx JX025 Dance & Electronica' — 105.18 EUR + spedizione n/d — venditore: josefr-68",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (kitsunebi2026)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/278370716640?_skw=Jinx&hash=item40d0300be0:g:QREAAeSwsKFqpnye",
+        "note": "[NUOVA] 'Jinx - Rebel Stamp Origins Release Event Prize 202 Riftbound BGS 9.5' — 250.0 EUR + 0.0 EUR sped. = 250.00 EUR tot. — venditore: kitsunebi2026",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (questing_cards)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/407214821000?_skw=Jinx&hash=item5ecfe50e88:g:1YwAAeSw5ctqfa9q",
+        "note": "[NUOVA] 'Riot Games League of Legends Star Guardian Team Mini Set 01 Poppy Jinx Lux' — 42.07 EUR + spedizione n/d — venditore: questing_cards",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (geek_world68)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/158008788560?_skw=Jinx&hash=item24ca0ec650:g:3CEAAeSwPYBqM4be&amdata=enc%3AAQALAAAA4ACCtXRWQnOEpyOqnQQ8KGZWWxyEMW6cbRyeXRdb9SsDPAPvmSdQsLXJsKg9u5qYF0PPRO6kl78Mh%2FkXx6eJPBp9rjix2WIDNiz%2BMfPBUNqjtmN91%2FH2yvnMFqnzXA%2B1%2BR5brZhq31YiRxxMKNm%2BEyqdnu7RHfe3Cyd9KFzBgOJ1aZ%2Fs1oA9bgP1NQqc2pZDbKGJRre8JIpssxG%2BB1BlrpsogPtAUdxiXQmbtsHLE9vuLFls5u5KLZd6A8AGqfNcYKrtq7QZUKBZ4%2Fw%2Bi36uxQIuAdY%2BNg5HLXZ%2FmS8go50m",
+        "note": "[PREZZO MIGLIORE] 'Logo Jinx League of Legends 3D - Déco Gaming Arcane Singe Graffiti...' — 19.0 EUR + 10.0 EUR sped. = 29.00 EUR tot. — venditore: geek_world68",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (lushsales)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/267782431325?_skw=Jinx&hash=item3e5913a25d:g:d2IAAeSwTvFqpAY4",
+        "note": "[NUOVA] 'Felpa con cappuccio zip intera grafica Jinx Minecraft Creeper verde/nero bambini giovani media' — 15.78 EUR + spedizione n/d — venditore: lushsales",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (giocus26)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/298666976912?_skw=Jinx&hash=item4589f06690:g:FK8AAeSw3bpp0f8c",
+        "note": "[NUOVA] 'Set 2 Funko Pop Arcane - Vi #1601 & Jinx #1602' — 58.94 EUR + 0.0 EUR sped. = 58.94 EUR tot. — venditore: giocus26",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (novaresinlab_3d)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/126908104070?_skw=Jinx&hash=item1d8c4ffd86:g:qKAAAOSwDuNnmfgm&amdata=enc%3AAQALAAAA4ACCtXRWQnOEpyOqnQQ8KGZxtRVUnSmCUvVF9jTaoynz%2BZD4KxFeZa1bHQn7zUWfJKAGUZ9CdJhZksXiSSTN9bfZIw%2Baqoxp9E4o81XPpEFZVYj6On%2F8xap4QAMoj1ai4z%2B59SVytDEFpOsRtkA56LP1k88Gi8xlKxqnQ0SyXysr2xN0XECfLOgSqjONfOlDA6%2FDTl2pAATU%2Frt7Dqjnv8eWPnyScOvogql%2FkzIOq76ZeP68Oess1QC%2FWdT%2BX0%2BN9lGUXgu10SngTrgNHmmtAGlYq3HhD%2BBlAuBsPSli5iUH",
+        "note": "[NUOVA] 'Arcane Jinx chibi action figure' — 27.74 EUR + 3.0 EUR sped. = 30.74 EUR tot. — venditore: novaresinlab_3d",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (acalderon22)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/128077831266?_skw=Jinx&hash=item1dd2089c62:g:LPsAAeSwICxqpwuS",
+        "note": "[NUOVA] 'Riftbound: League of Legends Origins Jinx Champion Deck - SIGILLATO, INGLESE, NUOVO' — 27.58 EUR + spedizione n/d — venditore: acalderon22",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (erbusc-49)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/366039804003?_skw=Jinx&hash=item5539ac2863:g:99cAAeSwVchpMpqu",
+        "note": "[NUOVA] 'Jinx  Loose Cannon OGN 301/298 Overnumbered Riftbound League of Legends chinois' — 78.7 EUR + 7.5 EUR sped. = 86.20 EUR tot. — venditore: erbusc-49",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (eventualsouvenirs)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/820092512670?_skw=Jinx&hash=itembef152a99e:g:3oAAAeSwWIxqnKxA",
+        "note": "[NUOVA] 'Die Another Day Halle Berry foto firmata Jinx PSA DNA' — 301.75 EUR + spedizione n/d — venditore: eventualsouvenirs",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (kel90810)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/800657435426?_skw=Jinx&hash=itemba6ae6eb22:g:97QAAeSwJYxqpyLr",
+        "note": "[NUOVA] 'Mezco Living Dead Dolls Jinx serie 6 come nuovo, sigillato' — 86.77 EUR + spedizione n/d — venditore: kel90810",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (miss*collector)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/315877485583?_skw=Jinx&hash=item498bc3ec0f:g:WNsAAeSw0RtpHbQE",
+        "note": "[NUOVA] 'Figurines GI JOE Classified Series JOUETS TOP collection Soldats militaires neuf' — 59.99 EUR + 0.0 EUR sped. = 59.99 EUR tot. — venditore: miss*collector",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (rc_8105)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/366647217382?_skw=Jinx&hash=item555de08ce6:g:0N0AAeSwZQNqmcuD&amdata=enc%3AAQALAAAA4ACCtXRWQnOEpyOqnQQ8KGZ%2F771B8kVuq2iodLuz3q%2FS2e6%2Ft98f2FFsgB29XYdFPpNQqX7wrrpNeR%2BDlNGZmaJOTzacJ4g%2BsPQg6Y47N2RdGgzg38T%2BpK8NUDDvroTYdXEXb5c2O4UvMDFovdVYBLlxklYWpcBHrd4Boq9C6d2RTVjKEsuF27JO%2BjyDAXqoCNk6o49h43tZyWS68vhZltTohuffOLSqmwVbE7EfDX%2FoN%2FfJeJaed%2F%2BVRiciKF4k%2F0%2F5VcOKSD%2B%2FdzMm6ycvUDdyWUh9BhtuSVjYv6FQjQ%2FV",
+        "note": "[NUOVA] 'Lotto carte FND cinesi Riftbound 2024 Project K Jinx Trial Deck' — 290.0 EUR + 25.0 EUR sped. = 315.00 EUR tot. — venditore: rc_8105",
         "marketplace": ""
       }
     ],
@@ -1868,6 +2019,246 @@
         "observed_on": "2026-09-13",
         "url": "https://www.pokebeach.com/2026/09/mew-rgb-secret-rares-pulled-from-30th-celebration",
         "note": "[tcg] Mew RGB Secret Rares Pulled From “30th Celebration,” May Remain Officially Unrevealed for Months",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (asuaction)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/137734162977?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item2011988a21:g:Qp0AAeSwShxqp0Wv",
+        "note": "[NUOVA] 'Pokemon TCG 30° Anniversario Celebrazione Elite Trainer Box ETB PREVENDITA 16/09/26' — 166.19 EUR + spedizione n/d — venditore: asuaction",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (midmotcg)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/336792349419?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item4e6a636aeb:g:IqEAAeSwXFhqpuBU",
+        "note": "[NUOVA] 'Pokemon Center Elite Trainer Box Celebrazione 30° Anniversario ETB Sigillato PREVENDITA' — 344.85 EUR + spedizione n/d — venditore: midmotcg",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (ma_tradeland_ltd)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/377494120974?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item57e4672a0e:g:KkwAAeSwsyZqp57z&amdata=enc%3AAQALAAABAACCtXRWQnOEpyOqnQQ8KGb%2FL%2F7GFNovmcCHvaxGXY0rgBiu9b6CfA8iz5wXF4jOrz1gJsZqNZmvEpsInnZOGVmFZx%2BGZaleTGltjp8cK%2FF01FVT%2FtdYvOpZq56xrtO%2BQRuyn4XdAPzkVBkguKiirSXlUv6tfh3PpCYvtvQN1jHFO%2BvHnfmAAFLUjheVLpSdbTquYE%2BU2347sECCA%2FiWcfZl7aRLUyhSIgOMQUyjStDrgSwzxS1z8JaXpy49Vn7BedAbHT%2FnwMlQQ9ERQ14gYW9lhIjc4XUKUxhI7%2FlgzdbbMBdbjb6nh5M2E1E5QBXY83lKf3SSdByTgx5iMegsn5c%3D",
+        "note": "[NUOVA] 'Pokémon TCG 30th Celebration – Elite Trainer Box |  Factory Sealed' — 122.54 EUR + 21.09 EUR sped. = 143.63 EUR tot. — venditore: ma_tradeland_ltd",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (aldos_collectables_cache)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/168686146759?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item27467a54c7:g:H7cAAeSwP-hqpupc&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGad6eANtDM%2Fmeay8%2Bl9eubPnDHx0zH9wHyjQpPz05CVcFwHL6zESLNWc2r2saW%2BMT7Me1oc2dXcOqzvxGW6sDCTkMpWa2a5p9nSFp%2FwFRPAjEI%2FqBHQHHDnOMacAPU1%2BBrneOE6AvoXfnlCDf7krzD9DNzGO16XqJPoXlgu%2ByRjFTJ25aRSS6IWsNly9zvnhKhcCa29Ii4bF4%2F7QMxSVxGUUopFMQTPZCXQCVbAKtAGDuIWuxex1lNOVKzX14TrJcDOo8BMdXHX%2BS%2BGeLUNtDnnwc3M1St3gxzfJ5CAnUEYg8%2BsXKE4v4U7F9M152JUum7h4OHT%2BDfAYJOdAk%2BWCubf",
+        "note": "[NUOVA] 'Pokémon Scatola Allenatore Elite Celebrazione 30° Anniversario ETB - PREVENDITA 9/16 + Custodia' — 173.55 EUR + spedizione n/d — venditore: aldos_collectables_cache",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (alexthesellerr)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/307174261475?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item47850342e3:g:0T8AAeSwx9pqpGEN&amdata=enc%3AAQALAAABAACCtXRWQnOEpyOqnQQ8KGac5OWFjRtiLOfIIMvVi%2FN7ZOw35cfmOkPrRHJDXL1iUni%2B5U%2Fh5QGayPaRrFG%2Bq%2Fldwf8WQT9S6ETd2e0tMRyf4ix6qTKC8K9pII2RgMa%2FFIhPqbQn0l5u6ZgHc0z0c0i3DYmhNxrR3CK4SdR283SxmCAmZcYEfjWel95nqek7YmSf7LFUb5YlIKmkT5wJKlz6tjl7LiSGOVS2yaB6NhQ30RAlbAvNKf8oarnfWUmwwlrDTbt0OHaplGUl7LCfTpb9JwqRHJ7m3GiiXllOZqC7276ivBmR8V5OyYAw%2F3dD3kOmEqdNY%2F3oiFPHzkUX7fI%3D",
+        "note": "[NUOVA] 'Pokémon TCG 30° Celebrazione Elite Trainer Box ETB Spedizione 16/09/26' — 157.77 EUR + 31.55 EUR sped. = 189.32 EUR tot. — venditore: alexthesellerr",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (t-east)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/137723444000?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item2010f4fb20:g:9QAAAeSwdbpqoJkH",
+        "note": "[NUOVA] 'Pokemon TCG: 30° Celebrazione Pokemon Center Elite Trainer Box - Nuovo' — 301.74 EUR + spedizione n/d — venditore: t-east",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (fred_489506)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/298671802750?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item458a3a097e:g:xAoAAeSwMyBqpx2j",
+        "note": "[NUOVA] 'Pokémon Scatola Allenatore Elite Celebrazione 30° Anniversario ETB - PREVENDITA Spedizione 9/16' — 168.28 EUR + spedizione n/d — venditore: fred_489506",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (jfitzy)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/327356610720?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item4c37f978a0:g:lIYAAeSwYjtqpvFu",
+        "note": "[NUOVA] 'Pokemon Scatola Allenatore Elite Celebrazione 30° Anniversario ETB SIGILLATA NUOVA' — 167.24 EUR + spedizione n/d — venditore: jfitzy",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (matteomarshall)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/336789904958?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item4e6a3e1e3e:g:szoAAeSwR7VqpGa2",
+        "note": "[NUOVA] 'Pokemon Center 30th Celebration Elite Trainer Box (PRESALE) - Ships 16/09' — 212.23 EUR + 21.66 EUR sped. = 233.89 EUR tot. — venditore: matteomarshall",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (h3sports)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/287580669590?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item42f524c696:g:veEAAeSw~dBqpElJ",
+        "note": "[NUOVA] 'Pokemon TCG: Scatola Allenatore Elite Celebrazione 30° Anniversario ETB PREORDINE' — 178.8 EUR + spedizione n/d — venditore: h3sports",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (superhero-777)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/318867970902?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item4a3e031b56:g:PP8AAeSwyD9qp1r2",
+        "note": "[NUOVA] 'POKEMON CENTER Elite Trainer Box 30th Anniversary Celebration ETB PRESALE' — 248.61 EUR + spedizione n/d — venditore: superhero-777",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (na_110640)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/820124153933?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=itembef335784d:g:tD0AAeSwQUpqp2Qq&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGYsMStIXLd9ae0Kk9yQYa19VJPn7RQkOUHrbZW1tBasgs7B32q2uDzed0ykpOc433YJDd6g88cuy8A17k%2F5Ior8JgzZJ1WSwyU88zG62Y5V2blnSdayT%2FBjVEgqRdFDqwjPfOb%2By0%2BhLWcGKN9KW2oJ99yq96HfHF7vdP9z0C2%2Be73XnjotHx9p%2BOtK6484XNC1laKiPiFsaTgvo97bhusUrlTmwQXWEt2fDMyd6aYviZ6vhU0i8uRL97imiAVwHtiedn4ZIo%2F4W9fj6LeLpDIdEiNQ9cNXDYQSSgfOMis1oCthvHjhkTokPUS9jGm5wEamb%2FOCU6pGx16eA47tJw2m",
+        "note": "[NUOVA] 'Pokemon Center Esclusivo 30° Anniversario ETB Elite Trainer Box Sigillato PREVENDITA' — 275.88 EUR + spedizione n/d — venditore: na_110640",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (voidcollectiblesuk)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/398238464493?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item5cb8dcb9ed:g:QdMAAeSwzM5qbgRd&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGZl%2Bodb8zsNNEsZNXNhR6xcdymNahuBsG7s9iUJImmpqAG68Vv%2B192jP3z7%2FaoEf2FERrHZdDLLM3i5kqDfRxue9oT9DWbYLd9UTY%2Fopd1u9s%2BF4xx7rF%2B%2BehgbPwyoqMJvHA4JFXVVPaAmcyoXSl1aHJ8nn6u%2BYfca%2FCQSUEer5bKjOhAANYg79A3MGBjn86WIaZiSJPUPxHnCcELtlW1xXWr2%2Be%2F63%2BqhoJJHACXTAaGHVFMr1gCZrbVPbTU6gbbJ6yzFcYJ7hYYjidPYcNeTy1OgERigCBJybK69eHURj%2BOUkDNf4OvQBSneQlEqa8LVHlnTssbAGiwBLK5UZY8J",
+        "note": "[NUOVA] 'Pokémon TCG 30th Celebration Pokémon Center Elite Trainer Box (ETB) | Presale' — 233.18 EUR + 24.85 EUR sped. = 258.03 EUR tot. — venditore: voidcollectiblesuk",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (flanny_shop202)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/278372843960?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item40d05081b8:g:GLMAAeSwXf5qp1fX",
+        "note": "[NUOVA] 'Pokémon Scatola Allenatore Elite Celebrazione 30° Anniversario ETB PREVENDITA - Sigillata' — 163.03 EUR + spedizione n/d — venditore: flanny_shop202",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (cotun_44)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/237066578515?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item373244ea53:g:M9EAAeSwN55qpwoe",
+        "note": "[NUOVA] 'Pokémon TCG 30° Celebrazione Elite Trainer Box Pikachu Inglese' — 174.59 EUR + spedizione n/d — venditore: cotun_44",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (hsk_3d)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/318858480229?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item4a3d724a65:g:1KEAAeSwM-NqpHyO&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGYwKzWE9pDN1K5AwJN4t5q9lDw1TnrRan%2FPwK28q5195vksZ0G%2FwVNlsUXxs4wkss2rTUA7NSr4Ub5pWJn5H0I9QLG5B%2FYPDqtfxti5bv4ILDD97xmFiuQd38fKWrrMxvyg%2BoN899kWXdeGKdZFFLGf5URCCfJ7ZzYKZgy4Qm%2FJYch9GZ5LLBSXEbQfEoSYUPi4gW%2FudSXqBiYuH%2F6PJpI%2BXI0qpzyPQiYDVoJzZPbj2LZudDRO1LVOmS3yTeiUzSaCRQmHSuBEIsrNH5N2t0ufIcez58WELtdC720UjDA4uAMF74fovMK6ULWInAS1CsFDWqbqiW4%2FHitQO7Q49DIs",
+        "note": "[PREZZO MIGLIORE] 'Protector Case for 30th Celebration Pokemon Elite Trainer Box' — 37.3 EUR + 16.1 EUR sped. = 53.40 EUR tot. — venditore: hsk_3d",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (chapcardco)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/178488814215?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item298ec32a87:g:Fq0AAeSw8HxqpKTJ",
+        "note": "[NUOVA] 'Pokemon TCG: Scatola Allenatore Elite Celebrazione 30° Anniversario ETB PREORDINE 9-16' — 164.07 EUR + spedizione n/d — venditore: chapcardco",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (lordofcards)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/198639954902?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item2e3fdd2bd6:g:n3YAAeSw5VpqoWL5",
+        "note": "[NUOVA] '2X Box Allenatore Elite Celebrazione 30° Anniversario Pokémon ETB PREVENDITA Spedizione 21/09' — 275.89 EUR + spedizione n/d — venditore: lordofcards",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (kage-resell)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/168686089229?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item274679740d:g:6~QAAeSwGjJqWSRP",
+        "note": "[NUOVA] '🇪🇺Pokémon Center 30th Celebration ETB *PREORDER* Elite Trainer Box EU SHIPPING' — 465.68 EUR + 9.99 EUR sped. = 475.67 EUR tot. — venditore: kage-resell",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (collectors.archive)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/398381798411?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item5cc167d40b:g:~wAAAeSwpRJqovEM",
+        "note": "[NUOVA] 'x4 Pokemon Center Exclusive 30th Celebration ETB Elite Trainer Box(s) ✅ PREORDER' — 4x — 906.82 EUR + 46.5 EUR sped. = 953.32 EUR tot. (238.33 EUR/pz) — venditore: collectors.archive",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (cals.corner)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/117409069225?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item1b562038a9:g:NtsAAeSw3HxqpWS-",
+        "note": "[NUOVA] 'PRESALE Pokemon TCG 30th Celebration Elite Trainer Box ETB Sealed 16/09/26' — 144.96 EUR + 21.86 EUR sped. = 166.82 EUR tot. — venditore: cals.corner",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (hjkalb10)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/377482783767?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item57e3ba2c17:g:rr4AAeSwzrJqoM78",
+        "note": "[NUOVA] 'Pokémon TCG 30° Celebrazione Elite Trainer Box Pikachu - 1 scatola per inserzione' — 147.25 EUR + spedizione n/d — venditore: hjkalb10",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (streakycollects)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/307171677721?_skw=Pokemon+30th+Celebration+Elite+Trainer+Box&hash=item4784dbd619:g:-KQAAeSwo-5qn-Um&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGa7zhD5sNF9aAakKEih52ISA%2B%2Fko7Z2GubvLpbatWOuoWfjElf4eaiJxVfpTu0SOKExRlA6Ua9kr3ybB6th9DOQlrv1TH%2FpFzuq2HnSbq1hTJ6cPvEWG0%2BEtg5fwomMyTZmxIKw2W8sABbeW9H2burCQXxVnA26l5fdVIuXv8Frt7bSGfiN05188Y0omMzOUH2uUmfpKbJLmquS5H%2FXp%2Bzf20B5LYhIy6XwrbnUGgrDRdwsytnx%2BHuqEa562PZioeRT%2B8QbkSwz%2BLHgh2jONz6BsQuB5dB2wTnkLGSEe34KC010Ql1Uxwqp9ebdS4CGGfgjxQAnyIfyN16cXfKV9Rha",
+        "note": "[NUOVA] '(PRESALE) Pokémon 30th Celebration Elite Trainer Box ETB 30th Anniversary 16/09' — 178.58 EUR + 21.91 EUR sped. = 200.49 EUR tot. — venditore: streakycollects",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (vinilietantoaltro)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/318867648043?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=item4a3dfe2e2b:g:a-IAAeSwkOJqp1NS&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGZBIw8ACzCpesJv%2F9KEI7dISrdlNK3YYC%2FEUp%2BkezUeJs%2Fz2lqRPuJ0DdyxftVAcMSOkBP6QQfufy0yMCpXiiujjH9zPAeAUMkVHiRMuh8Qs7%2BZCcLyl3MQICXNBOOheRsS2ZL%2BdFcXPej9ksA0ZqT4w5U2%2B2blpLu0qKiFIXJAMZCm5%2FR%2FwpRbPGl1kgD0wr7ntPIjmA2Y2RogAxnwqqepq9B2GiPZd2WbX77TiURKHqhYtUOx0gMWual%2BosSm3PZhf2Cmmb%2BRQi6l4JUldgE3GzupukV2t8%2BckxUEAJs6scC3yjw8aJMcZlz5KzZPOyJV38oIctPEI83tdJxLTeSY",
+        "note": "[NUOVA] 'Pokemon Set Allenatore Fuoriclasse 30th Anniversario Etb Italiano 🇮🇹' — 94.2 EUR + 4.9 EUR sped. = 99.10 EUR tot. — venditore: vinilietantoaltro",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (marco49x)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/168686303849?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=item27467cba69:g:PdYAAeSwC5xql0Js",
+        "note": "[NUOVA] 'Pokemon ETB SET ALLENATORE FUORICLASSE 30th Anniversario - ITA PREORDER 17.09' — 94.2 EUR + 9.9 EUR sped. = 104.10 EUR tot. — venditore: marco49x",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (giacava68)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/820101696000?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=itembef1deca00:g:AaEAAeSw7eRqn9Pd",
+        "note": "[NUOVA] 'Pokemon Set Allenatore Fuoriclasse 30th Anniversario ETB ITA 🇮🇹 [PREORDER] ✅' — 94.3 EUR + 5.0 EUR sped. = 99.30 EUR tot. — venditore: giacava68",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (power_tronic)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/147562571448?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=item225b6a26b8:g:T64AAeSw5fpqobBF",
+        "note": "[NUOVA] 'Pokemon 30th Anniversario Set Allenatore Fuoriclasse ETB SEALED ITA' — 91.9 EUR + 0.0 EUR sped. = 91.90 EUR tot. — venditore: power_tronic",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (selezioneshop)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/800654427808?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=itemba6ab906a0:g:WyQAAeSwCvBqpmMf&amdata=enc%3AAQALAAABEACCtXRWQnOEpyOqnQQ8KGbr%2BtWRBOB2%2FHew1kS6BhGHJDwZfYwe3Psg9HpP843WEVdyzYib0ra69p29oLGdZZcSQGOfXhadnHzNGNhg%2FSRkmqhwe%2FStgpHmYI2eHRwnoSVgzZ0Pk3M1NUYg09bC64XhwRWJm0Mr1Q%2BdPyYSVW5QjfEvU4Sm2OY0V78FsXpcloQa0YVtWrtGxD7p%2BnALM7EPItXHeLGM0Aadz400g364F%2FvmW32BgWmgCCDzwYKurS89JIpV70VxrAMLygiQvgJJPiO%2Fd0N%2FyUs6uY6JqU%2F1Jm6cG0aTFNPP3otPjG29DFWZ9bvPI51ymG4Y4OEk0JwQIdd1ZCspeGY81keBnqjy",
+        "note": "[NUOVA] 'Pokemon 30° Anniversario Set Allenatore Fuoriclasse ETB ITA Sigillato Sealed' — 124.9 EUR + 0.0 EUR sped. = 124.90 EUR tot. — venditore: selezioneshop",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (samuv05)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/298663960110?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=item4589c25e2e:g:QO4AAeSwHO1qkh6v",
+        "note": "[NUOVA] 'Pokémon TCG Set Allenatore Fuoriclasse ETB 30° Anniversario Box ITA' — 79.99 EUR + 9.4 EUR sped. = 89.39 EUR tot. — venditore: samuv05",
+        "marketplace": ""
+      },
+      {
+        "source_type": "listing_claim",
+        "source_name": "eBay - inserzione (kevincattani99)",
+        "observed_on": "2026-09-14",
+        "url": "https://www.ebay.it/itm/206390382244?_skw=Pokemon+Set+Allenatore+Fuoriclasse+30+Anniversario&hash=item300dd34ea4:g:NcYAAeSwp7RqR1Zm",
+        "note": "[NUOVA] '(PREORDINE 16/09) Pokemon Set Allenatore Fuoriclasse 30th Anniversario ETB ITA ✅' — 109.9 EUR + 0.0 EUR sped. = 109.90 EUR tot. — venditore: kevincattani99",
         "marketplace": ""
       }
     ],
