@@ -52,17 +52,28 @@ STOCK_WATCHLIST = [
 # eBay è diverso dagli altri: non ha una singola pagina prodotto con uno
 # stato "disponibile/esaurito" — ha tante inserzioni di venditori diversi.
 # Qui usiamo la stessa logica di ebay_new_listing_scanner.py (nuove
-# inserzioni + le 3 col prezzo totale più basso, sempre), con DUE query per
-# prodotto — una in inglese, una in italiano — perché abbiamo scoperto che
-# usare solo l'inglese perde gran parte del mercato italiano (lezione della
-# sessione: "Elite Trainer Box" vs "Set Allenatore Fuoriclasse").
+# inserzioni + le 3 col prezzo UNITARIO più basso, sempre — vedi
+# unit_price/detect_quantity per i bundle da 2+ pezzi).
+#
+# NOTA SU QUESTO CONTROLLO: da qui in avanti gira sul job orario dedicato
+# (ebay_check.yml / ebay_check_main.py, stato in ebay_state.json), NON più
+# insieme al controllo scorte rivenditori ogni 20 minuti — troppi post,
+# e per eBay un ritardo di un'ora non cambia granché rispetto a un ritardo
+# di 20 minuti, a differenza di un preordine diretto che può esaurirsi in
+# pochi minuti.
+#
+# STRUTTURA UPC: Giorno e Notte sono UNITI in un solo pool prezzi per
+# lingua (sono nella stessa fascia di prezzo, a differenza di ETB vs UPC —
+# per questo l'ETB resta un prodotto a sé) — ma il pool inglese e quello
+# italiano restano SEPARATI e postati separatamente, come richiesto: "in
+# ITA un monitoraggio, in altra lingua l'altro". La query "generica" senza
+# Day/Night esplicito (es. "...Ultra Premium Collection") è inclusa apposta
+# per catturare le inserzioni bundle che vendono Giorno+Notte insieme e
+# magari non ripetono "Day"/"Night" per ciascuno nel titolo.
 #
 # "ebay_include_any_of"/"ebay_exclude" (opzionali): filtro anti-falsi-
-# positivi, si sommano a EXCLUDE + EBAY_LISTING_EXCLUDE di keywords.py.
-# Qui servono soprattutto a non mischiare ETB/UPC Giorno/UPC Notte tra loro
-# — sono tutti "30° Anniversario" ma sono prodotti diversi con prezzi molto
-# diversi, e le 3 più economiche vanno confrontate solo dentro lo stesso
-# prodotto.
+# positivi, si sommano a EXCLUDE + EBAY_LISTING_EXCLUDE di keywords.py
+# (che ora esclude anche le custodie magnetiche/acriliche).
 EBAY_WATCHLIST = [
     {
         "product_id": "30th_celebration_etb",
@@ -78,29 +89,37 @@ EBAY_WATCHLIST = [
         "ebay_exclude": ["scarlet violet", "sword shield", "sun moon", "ultra premium", "upc"],
     },
     {
-        "product_id": "30th_celebration_upc_day",
-        "product_name": "Pokémon 30° Anniversario UPC Giorno (Espeon)",
+        "product_id": "30th_celebration_upc_eng",
+        "product_name": "Pokémon 30° Anniversario Ultra Premium Collection (EN)",
         "queries": [
             "Pokemon 30th Celebration Ultra Premium Collection Day Espeon",
-            "Pokemon 30 Anniversario Collezione Ultra Premium Giorno Espeon",
+            "Pokemon 30th Celebration Ultra Premium Collection Night Umbreon",
+            "Pokemon 30th Celebration Ultra Premium Collection",
         ],
         "ebay_include_any_of": [
             ["ultra premium", "upc"],
-            ["day", "giorno", "espeon"],
+            ["day", "night", "espeon", "umbreon", "giorno", "notte"],
         ],
-        "ebay_exclude": ["scarlet violet", "sword shield", "sun moon", "umbreon", "notte", "night"],
+        "ebay_exclude": [
+            "scarlet violet", "sword shield", "sun moon",
+            "elite trainer box", "etb", "allenatore fuoriclasse",
+        ],
     },
     {
-        "product_id": "30th_celebration_upc_night",
-        "product_name": "Pokémon 30° Anniversario UPC Notte (Umbreon)",
+        "product_id": "30th_celebration_upc_ita",
+        "product_name": "Pokémon 30° Anniversario Ultra Premium Collection (ITA)",
         "queries": [
-            "Pokemon 30th Celebration Ultra Premium Collection Night Umbreon",
+            "Pokemon 30 Anniversario Ultra Premium Giorno Espeon",
             "Pokemon 30 Anniversario Ultra Premium Notte Umbreon",
+            "Pokemon 30 Anniversario Collezione Ultra Premium",
         ],
         "ebay_include_any_of": [
-            ["ultra premium", "upc"],
-            ["night", "notte", "umbreon"],
+            ["ultra premium", "upc", "collezione"],
+            ["day", "night", "espeon", "umbreon", "giorno", "notte"],
         ],
-        "ebay_exclude": ["scarlet violet", "sword shield", "sun moon", "espeon", "giorno", "day"],
+        "ebay_exclude": [
+            "scarlet violet", "sword shield", "sun moon",
+            "elite trainer box", "etb", "allenatore fuoriclasse",
+        ],
     },
 ]

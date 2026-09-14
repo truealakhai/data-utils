@@ -52,11 +52,23 @@ Note di design aggiunte in questa versione:
    quanti segnali positivi ci siano altrove nel titolo. Pensato per essere
    alimentato dalle liste già definite in keywords.py (GENERIC/POKEMON/
    YUGIOH/RIFTBOUND/EXCLUDE) invece di duplicare le parole chiave qui.
+
+4) PREZZO UNITARIO, NON TOTALE — alcune inserzioni vendono PIÙ pezzi
+   insieme (bundle da 2/3/4). select_cheapest() confronta ora
+   EbayListing.unit_price (prezzo totale diviso la quantità rilevata nel
+   titolo, vedi detect_quantity), non il prezzo totale grezzo — altrimenti
+   un bundle a un ottimo prezzo per pezzo verrebbe scartato solo perché il
+   totale è più alto di una singola unità. detect_quantity è un'euristica
+   testuale: in caso di dubbio ritorna 1 (nessun bundle rilevato), scelta
+   prudente — sottostimare un bundle reale fa solo perdere una
+   segnalazione buona, sovrastimarlo farebbe sembrare un'inserzione più
+   economica di quanto sia davvero.
 """
 
 from __future__ import annotations
 
 import base64
+import re
 from dataclasses import dataclass
 from datetime import date
 from typing import Callable, Iterable, List, Optional, Sequence, Set
@@ -105,6 +117,46 @@ def get_application_token(
     return resp["access_token"]
 
 
+_QUANTITY_PATTERNS = [
+    re.compile(r'\b(\d{1,2})\s*x\b', re.IGNORECASE),
+    re.compile(r'\bx\s*(\d{1,2})\b', re.IGNORECASE),
+    re.compile(r'\blotto\s+(?:di|da)\s+(\d{1,2})\b', re.IGNORECASE),
+    re.compile(r'\bset\s+(?:di|da)\s+(\d{1,2})\b', re.IGNORECASE),
+    re.compile(r'\b(\d{1,2})\s*(?:pezzi|pz\.?|box(?:es)?|units?)\b', re.IGNORECASE),
+]
+_DAY_WORDS = ("day", "giorno", "espeon")
+_NIGHT_WORDS = ("night", "notte", "umbreon")
+
+
+def detect_quantity(title: str) -> int:
+    """
+    Euristica testuale: l'inserzione vende PIÙ unità insieme? Riconosce
+    forme esplicite ("2x", "x3", "lotto di 2", "3 pezzi") e un caso
+    implicito ma affidabile: un titolo che nomina SIA la variante Giorno
+    SIA quella Notte è quasi certamente una coppia, una per tipo.
+
+    In caso di dubbio ritorna 1 (nessun bundle rilevato) — scelta
+    prudente: sottostimare un bundle reale fa solo perdere una
+    segnalazione buona, sovrastimarlo farebbe sembrare un'inserzione più
+    economica per pezzo di quanto sia davvero.
+    """
+    t = title.lower()
+    for pattern in _QUANTITY_PATTERNS:
+        m = pattern.search(t)
+        if m:
+            try:
+                q = int(m.group(1))
+                if 2 <= q <= 10:  # oltre 10 è quasi certamente un altro tipo di match
+                    return q
+            except (ValueError, IndexError):
+                continue
+    if any(w in t for w in _DAY_WORDS) and any(w in t for w in _NIGHT_WORDS):
+        return 2
+    if "coppia" in t:
+        return 2
+    return 1
+
+
 @dataclass
 class EbayListing:
     item_id: str
@@ -125,6 +177,22 @@ class EbayListing:
         if self.price is None or self.shipping_cost is None:
             return None
         return self.price + self.shipping_cost
+
+    @property
+    def quantity(self) -> int:
+        return detect_quantity(self.title)
+
+    @property
+    def unit_price(self) -> Optional[float]:
+        """
+        total_price diviso la quantità rilevata nel titolo — usato per
+        confrontare equamente un'inserzione singola con un bundle da 2+
+        pezzi. None con le stesse regole di total_price (spedizione
+        ignota esclusa dal confronto).
+        """
+        if self.total_price is None:
+            return None
+        return self.total_price / self.quantity
 
 
 def _parse_shipping_cost(item: dict) -> Optional[float]:
@@ -241,18 +309,23 @@ def filter_relevant_listings(
 
 def select_cheapest(listings: Iterable[EbayListing], top_n: int = 3) -> List[EbayListing]:
     """
-    Le top_n inserzioni per prezzo totale (prodotto + spedizione) più basso,
-    a PRESCINDERE da seen_item_ids: anche se già segnalate in scansioni
-    precedenti, vanno comunque incluse ogni volta se restano tra le più
-    economiche — è un segnale "miglior prezzo attuale", non "cosa è cambiato
-    dall'ultima scansione".
+    Le top_n inserzioni per PREZZO UNITARIO (prodotto+spedizione diviso la
+    quantità rilevata nel titolo, vedi EbayListing.unit_price) più basso —
+    non prezzo totale grezzo: un'inserzione che vende 2 pezzi a 150€
+    (75€/pz) deve poter battere una singola a 90€, non essere scartata solo
+    perché il totale è più alto.
 
-    Le inserzioni senza total_price calcolabile (prezzo o spedizione
+    A PRESCINDERE da seen_item_ids: anche se già segnalate in scansioni
+    precedenti, vanno comunque incluse ogni volta se restano tra le più
+    economiche — è un segnale "miglior prezzo attuale", non "cosa è
+    cambiato dall'ultima scansione".
+
+    Le inserzioni senza unit_price calcolabile (prezzo o spedizione
     mancanti) sono escluse dal confronto, non messe in fondo alla lista:
     non possiamo confrontarle in modo affidabile con le altre.
     """
-    pricable = [l for l in listings if l.total_price is not None]
-    return sorted(pricable, key=lambda l: l.total_price)[:top_n]
+    pricable = [l for l in listings if l.unit_price is not None]
+    return sorted(pricable, key=lambda l: l.unit_price)[:top_n]
 
 
 def find_new_listings(listings: List[EbayListing], seen_item_ids: Set[str]) -> List[EbayListing]:
@@ -276,6 +349,13 @@ def listing_to_evidence(
         price_str = "prezzo n/d"
     elif listing.shipping_cost is None:
         price_str = f"{listing.price} {listing.currency} + spedizione n/d"
+    elif listing.quantity > 1:
+        price_str = (
+            f"{listing.quantity}x — {listing.price} {listing.currency} + "
+            f"{listing.shipping_cost} {listing.currency} sped. = "
+            f"{listing.total_price:.2f} {listing.currency} tot. "
+            f"({listing.unit_price:.2f} {listing.currency}/pz)"
+        )
     else:
         price_str = (
             f"{listing.price} {listing.currency} + {listing.shipping_cost} "

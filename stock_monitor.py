@@ -277,7 +277,12 @@ def run_ebay_check(
         cheapest_ids = {l.item_id for l in cheapest}
 
         def _line(l, reason):
-            if l.total_price is not None:
+            if l.unit_price is not None and l.quantity > 1:
+                price_str = (
+                    f"{l.quantity}x — {l.total_price:.2f} {l.currency} tot. "
+                    f"({l.unit_price:.2f} {l.currency}/pz)"
+                )
+            elif l.total_price is not None:
                 price_str = f"{l.total_price:.2f} {l.currency} tot."
             elif l.price is not None:
                 price_str = f"{l.price} {l.currency} + spedizione n/d"

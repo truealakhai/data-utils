@@ -72,4 +72,8 @@ EBAY_LISTING_EXCLUDE = [
     # Falso positivo osservato in sessione: un'inserzione per una copertina
     # rigida/raccoglitore a tema, non il prodotto sigillato originale.
     "hard cover", "hardcover", "copertina rigida",
+    # Accessori (teche/custodie) venduti col nome del prodotto nel titolo,
+    # non il prodotto stesso.
+    "magnetic case", "acrylic case", "custodia magnetica", "custodia acrilica",
+    "teca magnetica", "teca acrilica",
 ]
